@@ -54,13 +54,13 @@ Este proyecto es una aplicación web para el club de baloncesto Basquet Lloret, 
 
 3. **Instalar dependencias**:
    En la carpeta raíz del proyecto, instala todas las dependencias necesarias ejecutando el siguiente comando:
-
+     ```
      npm install
      ```
 
 4. **Iniciar el servidor de desarrollo**:
 Para iniciar el servidor de desarrollo y levantar la aplicación, ejecuta el siguiente comando:
-
+     ```
      ng serve
      ```
 
