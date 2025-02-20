@@ -1,0 +1,17 @@
+img {
+  max-height: 200px;
+}
+.outline-none {
+  outline: none;
+}
+i.fa-user-edit, i.fa-pen, i.fa-globe {
+  cursor: pointer;
+}
+
+.inactivoWeb {
+  box-shadow: 0 0 5px 5px rgba(255, 26, 26, 0.55);
+}
+
+.activoWeb {
+  box-shadow: 0 0 5px 5px rgba(26, 255, 33, 0.55);
+}

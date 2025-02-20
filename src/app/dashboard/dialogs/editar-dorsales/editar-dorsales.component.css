@@ -1,0 +1,14 @@
+.outline-none {
+  outline: none;
+}
+.text-green {
+  color: #00621b;
+}
+#dorsalInput {
+  width: 25px;
+  border: none;
+  border-bottom: black 1px solid;
+}
+i.fa-save, img{
+  cursor: pointer;
+}
