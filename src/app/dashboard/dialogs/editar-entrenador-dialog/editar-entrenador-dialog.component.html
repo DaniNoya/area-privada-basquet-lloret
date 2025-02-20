@@ -1,0 +1,109 @@
+<div class="container">
+  <button id="close" mat-dialog-close class="close outline-none"><i class="fas fa-times-circle"></i></button>
+  <form #editForm="ngForm" (ngSubmit)="save()">
+    <div class="form-row">
+      <div class="col-1">
+        <label for="inputId">Id</label>
+        <input type="number" class="form-control" id="inputId" name="id" value="{{data.entrenador.id}}" [(ngModel)]="data.entrenador.id" disabled>
+      </div>
+    </div>
+    <div class="form-row mt-3">
+      <div class="col">
+        <label for="inputNombre">Nombre</label>
+        <input type="text" class="form-control" id="inputNombre" name="nombre" #inputNombre="ngModel" [(ngModel)]="data.entrenador.nombre" required>
+        <div *ngIf="!inputNombre.valid && (inputNombre.dirty || inputNombre.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col">
+        <label for="inputPrimerApellido">Primer Apellido</label>
+        <input type="text" class="form-control" id="inputPrimerApellido" name="primer_apellido" #inputPrimerApellido="ngModel" [(ngModel)]="data.entrenador.primer_apellido" required>
+        <div *ngIf="!inputPrimerApellido.valid && (inputPrimerApellido.dirty || inputPrimerApellido.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col">
+        <label for="inputSegundoApellido">Segundo Apellido</label>
+        <input type="text" class="form-control" id="inputSegundoApellido" name="segundo_apellido" [(ngModel)]="data.entrenador.segundo_apellido">
+      </div>
+    </div>
+    <div class="form-row mt-3">
+      <div class="col">
+        <label for="inputDni">D.N.I./N.I.E</label>
+        <input type="text" class="form-control" id="inputDni" name="dni" #inputDni="ngModel" [(ngModel)]="data.entrenador.dni" required>
+        <div *ngIf="!inputDni.valid && (inputDni.dirty || inputDni.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col">
+        <label for="inputFechaNacimiento">Fecha Nacimiento</label>
+        <input type="date" class="form-control" id="inputFechaNacimiento" name="fecha_nacimiento" #inputFechaNacimiento="ngModel" [(ngModel)]="data.entrenador.fecha_nacimiento" required>
+        <div *ngIf="!inputFechaNacimiento.valid && (inputFechaNacimiento.dirty || inputFechaNacimiento.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col">
+        <label for="inputTelefono1">Teléfono 1</label>
+        <input type="text" class="form-control" id="inputTelefono1" name="telefono1" #inputTelefono1="ngModel" [(ngModel)]="data.entrenador.telefono1" required>
+        <div *ngIf="!inputTelefono1.valid && (inputTelefono1.dirty || inputTelefono1.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col">
+        <label for="inputTelefono2">Teléfono 2</label>
+        <input type="text" class="form-control" id="inputTelefono2" name="telefono2" [(ngModel)]="data.entrenador.telefono2">
+      </div>
+    </div>
+    <div class="form-row mt-3">
+      <div class="col-6">
+        <label for="inputDireccion">Dirección</label>
+        <input type="text" class="form-control" id="inputDireccion" name="direccion" #inputDireccion="ngModel" [(ngModel)]="data.entrenador.direccion" required>
+        <div *ngIf="!inputDireccion.valid && (inputDireccion.dirty || inputDireccion.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col-2">
+        <label for="inputCodigoPostal">Código Postal</label>
+        <input type="text" class="form-control" id="inputCodigoPostal" name="codigo_postal" #inputCodigoPostal="ngModel"  [(ngModel)]="data.entrenador.codigo_postal" required>
+        <div *ngIf="!inputCodigoPostal.valid && (inputCodigoPostal.dirty || inputCodigoPostal.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col-4">
+        <label for="inputLocalidad">Población</label>
+        <input type="text" class="form-control" id="inputLocalidad" name="localidad" #inputLocalidad="ngModel" [(ngModel)]="data.entrenador.localidad" required>
+        <div *ngIf="!inputLocalidad.valid && (inputLocalidad.dirty || inputLocalidad.touched)" class="text-danger">Campo requerido</div>
+      </div>
+    </div>
+    <div class="form-row mt-3">
+      <div class="col">
+        <label for="inputEmail">Correo electrónico</label>
+        <input type="email" class="form-control" id="inputEmail" name="email" #inputEmail="ngModel" [(ngModel)]="data.entrenador.email" required>
+        <div *ngIf="!inputEmail.valid && (inputEmail.dirty || inputEmail.touched)" class="text-danger">El correo debe tener un formato correcto</div>
+      </div>
+      <div class="col">
+        <label for="inputObservaciones">Observaciones</label>
+        <textarea class="form-control" id="inputObservaciones" name="observaciones" [(ngModel)]="data.entrenador.observaciones"></textarea>
+      </div>
+    </div>
+    <div class="form-row mt-3">
+      <div class="col">
+        <label for="selectNivelFormacion">Nivel Formación</label>
+        <select class="form-control" id="selectNivelFormacion" name="id_nivel_formacion" #selectNivelFormacion="ngModel" [(ngModel)]="data.entrenador.id_nivel_formacion" required>
+          <option *ngFor="let nivelFormacion of nivelesFormacion" value="{{ nivelFormacion.id }}">{{ nivelFormacion.nivel_formacion }}</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="selectSexo">Sexo</label>
+        <select class="form-control" id="selectSexo" name="id_sexo" [(ngModel)]="data.entrenador.id_sexo" required>
+          <option *ngFor="let sexo of sexos" value="{{ sexo.id }}">{{ sexo.sexo }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row mt-3">
+      <input type="file" accept="image/jpg" id="inputFoto" name="foto" #file imageUpload (imageSelected)="selected($event)" [resizeOptions]="resizeOptions"/>
+      <button type="button" class="close" tooltip="Eliminar foto" *ngIf="data.entrenador.foto !== ''" (click)="data.entrenador.foto = ''"><i class="fas fa-times-circle"></i></button>
+      <img src="{{ data.entrenador.foto }}" height="100px" width="100px"/>
+    </div>
+    <div class="mt-3">
+      <button [disabled]="!editForm.form.valid" type="submit" class="btn btn-success">Guardar</button>
+      <button mat-dialog-close class="btn btn-secondary ml-3">Cancelar</button>
+      <div class="btn alert-danger ml-3" *ngIf="error">{{ error }}</div>
+    </div>
+  </form>
+</div>
+<ngx-spinner
+  bdColor = "rgba(51,51,51,0.8)"
+  size = "medium"
+  color = "#fff"
+  type = "ball-climbing-dot"
+  [fullScreen] = "true"
+>
+  <p style="color: white" > Espere por favor... </p>
+</ngx-spinner>

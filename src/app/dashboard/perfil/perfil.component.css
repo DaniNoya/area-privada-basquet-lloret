@@ -1,0 +1,101 @@
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:wght@700&display=swap');
+
+.card__container {
+  position: relative;
+  height: 250px;
+  width: 400px;
+  font-family: 'Poppins', sans-serif;
+  margin:0; padding:0;
+  box-sizing: border-box;
+  outline: none; border: none;
+  text-decoration: none;
+  text-transform: uppercase;
+  cursor: default;
+}
+
+.card__container .front__container {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 0; left: 0;
+  background-image: url("../../../assets/fondo_1920x1080_bola.jpg");
+  background-repeat:no-repeat;
+  background-size: cover;
+  border-radius: 10px;
+  backface-visibility: hidden;
+  /*box-shadow: 0 15px 25px rgba(0,0,0,.2);*/
+  box-shadow: 2px 2px 8px rgb(0,0,0);
+  font-size: 20px;
+  transform:perspective(1000px) rotateY(0deg);
+  transition:transform .4s ease-out;
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+  user-select: none;
+}
+
+.card__container .front__container .front__wrapper {
+  position:relative;
+}
+
+.card__container .front__container .front__wrapper .front__data__socio {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  padding:15px;
+}
+
+.card__container .front__container .front__wrapper .front__data__socio .front__title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 40px;
+  color: #fff;
+}
+
+.card__container .front__container .front__wrapper .front__data__socio .box__temporada__socio {
+  display: flex;
+  justify-content: space-between;
+  padding-right: 135px;
+}
+
+.card__container .front__container .front__wrapper .front__data__socio .box__temporada__socio .container__temporada {
+  width: 100%;
+  margin-right: 5px;
+}
+
+.card__container .front__container .front__wrapper .front__data__socio .box__temporada__socio .container__socio {
+  width: 100%;
+  margin-left: 5px;
+}
+
+.card__container .front__container .front__wrapper .front__data__socio .container__name {
+  padding-right: 120px;
+}
+
+.card__container .front__container .front__wrapper .front__data__socio .container__title {
+  font-family: 'Exo 2', sans-serif;
+  font-size: 20px;
+  color: #fff;
+}
+
+.card__container .front__container .front__wrapper .front__data__socio .card__input__box {
+  height: 40px;
+  padding: 10px 10px;
+  font-size: 20px;
+  color:#333;
+  background: #fff;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.card__container .front__container .front__wrapper .front__img__bull {
+  position: absolute;
+  width: 180px;
+  height: 180px;
+  right:5px;
+  top: 70px;
+  /*border:1px solid;*/
+}
