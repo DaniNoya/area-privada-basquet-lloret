@@ -1,0 +1,68 @@
+<div class="container">
+  <div class="row" style="justify-content: flex-end; margin-bottom: 20px;">
+    <button id="close" class="close outline-none" (click)="this.dialogRef.close({quotes: this.data.jugador.quotes})"><i class="fas fa-times-circle"></i></button>
+  </div>
+
+  <mat-accordion class="example-headers-align" multi>
+    <div *ngFor="let tipo of tiposPago" class="mb-2">
+      <mat-expansion-panel class="acordeonConcepto" *ngIf="checkHaveInscripcion(this.data.jugador, tipo.id)">
+
+        <mat-expansion-panel-header>
+          <mat-panel-title class="col-6"><h5>{{tipo.concepto}}</h5></mat-panel-title>
+          <mat-panel-description class="col-6" style="justify-content: flex-end">
+            <div *ngIf="checkHaveInscripcion(this.data.jugador, tipo.id)" style="display: flex;">
+              <div *ngFor="let quota of getQuota(this.data.jugador, tipo.id)">
+                <h6 style="margin-right: 5px;">Cuota total: {{quota.importe}} €</h6>
+              </div>
+              <h6 style="margin-right: 5px;">/</h6>
+              <div *ngFor="let restante of getRestante(this.data.jugador, tipo.id)">
+                <h6 style="margin-right: 20px;">Restante: {{restante.importe}} €</h6>
+              </div>
+            </div>
+            <div *ngIf="!checkHaveInscripcion(this.data.jugador, tipo.id)">
+              <h6 style="margin-right: 20px;"><b>No está inscrito</b></h6>
+            </div>
+          </mat-panel-description>
+        </mat-expansion-panel-header>
+
+        <mat-nav-list>
+          <div class="row" *ngIf="checkHaveInscripcion(this.data.jugador, tipo.id)" style="display: flex; justify-content: space-between; max-width: 100%; margin-left: 0 !important;">
+            <button (click)="editCuota(this.data.jugador, tipo.id)" class="btn btn-secondary">EDITAR CUOTA</button>
+            <div *ngIf="resValidPermiso == true" style="display: flex; align-items: center;">
+              <input #nuevaCuota type="number" class="mr-3" min="0" style="max-width: 60px; text-align: center;">
+              <button class="btn btn-success mr-2" (click)="updateCuota(this.data.jugador.id, nuevaCuota.value, tipo.id)">Guardar</button>
+              <button class="btn btn-danger" (click)="resValidPermiso = false">Cancelar</button>
+            </div>
+          </div>
+          <div *ngIf="!checkHavePagos(this.data.jugador.pagos, tipo.id)">
+            <hr style="background-color: #28a745;">
+            <span *ngIf="!checkHaveInscripcion(this.data.jugador, tipo.id)"><b>No está inscrito</b></span>
+            <span *ngIf="checkHaveInscripcion(this.data.jugador, tipo.id)"><b>No tiene pagos asociados</b></span>
+            <hr style="background-color: #28a745;">
+          </div>
+          <div *ngIf="checkHavePagos(this.data.jugador.pagos, tipo.id)">
+            <hr style="background-color: #28a745;">
+            <mat-list-item style="pointer-events: none; cursor: default;">
+              <div class="row" style="width: 100%;">
+                <div class="col-6"><b><u>Concepto</u></b></div>
+                <div class="col-3"><b><u>Fecha</u></b></div>
+                <div class="col-3"><b><u>Importe</u></b></div>
+              </div>
+              <!--<h6>Concepto</h6><hr><h6>Fecha</h6><hr><h6>Importe</h6>-->
+            </mat-list-item>
+            <mat-list-item *ngFor="let pago of getPagosFiltered(this.data.jugador.pagos, tipo.id)">
+              <div class="row" style="width: 100%;">
+                <div class="col-6">{{pago.descripcion}}</div>
+                <div class="col-3">{{pago.fechaTransaccion}}</div>
+                <div class="col-3">{{pago.importe}}</div>
+              </div>
+              <!--<p>{{pago.descripcion}}</p><hr><p>{{pago.fechaTransaccion}}</p><hr><p class="precioImporte">{{pago.importe}}</p>-->
+            </mat-list-item>
+            <hr style="background-color: #28a745;">
+          </div>
+        </mat-nav-list>
+  
+      </mat-expansion-panel>
+    </div>
+  </mat-accordion>
+</div>

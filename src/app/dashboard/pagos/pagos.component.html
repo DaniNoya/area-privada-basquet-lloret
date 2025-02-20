@@ -1,0 +1,719 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Pagos</h1>
+</div>
+
+<mat-tab-group (selectedTabChange)="filter.nativeElement.value = ''; filterNoCompletados.nativeElement.value = ''; volver()">
+  <mat-tab label="Pagos realizados" [disabled]="pagoSeleccionado">
+    <div *ngIf="!pagoSeleccionado" class="p-2 mt-4">
+      <mat-form-field>
+        <input matInput #filter type="text" placeholder="Filtrar" (keyup)="applyFilter($event.target.value)">
+      </mat-form-field>
+
+      <mat-form-field class="ml-5">
+        <mat-label>Tipo de movimiento</mat-label>
+        <mat-select [(value)]="tipoMovimiento" (valueChange)="ngOnInit();ngAfterViewInit()">
+          <mat-option [value]="'all'">Todo</mat-option>
+          <mat-option *ngFor="let tipo of tiposPago" [value]="tipo.id">{{tipo.concepto}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <mat-form-field class="ml-5">
+        <mat-label>Mètodo de visualización</mat-label>
+        <mat-select [(value)]="metodoVisualizacion" (valueChange)="ngOnInit();ngAfterViewInit()">
+          <mat-option [value]="'all'">Todo</mat-option>
+          <mat-option [value]="'pagoOnline'">Pago Online</mat-option>
+          <mat-option [value]="'pagoManual'">Pago Manual</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <button (click)="startAdd()" class="btn btn-success float-right">Añadir</button>
+
+      <button (click)="downloadPagos()" class="btn btn-primary float-right mr-2">Exportar datos</button>
+
+      <div class="mat-elevation-z8">
+        <mat-spinner [diameter]="50" *ngIf="isLoadingResults"></mat-spinner>
+        <table class="w-100" mat-table [dataSource]="dataSource" #sort="matSort" matSort>
+
+          <ng-container matColumnDef="tutor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tutor</th>
+            <td mat-cell *matCellDef="let row"> {{row.tutor}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dniTutor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>dniTutor</th>
+            <td mat-cell *matCellDef="let row"> {{row.dniTutor}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="jugador">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Jugador</th>
+            <td mat-cell *matCellDef="let row"> {{row.jugador}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dniJugador">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>dniJugador</th>
+            <td mat-cell *matCellDef="let row"> {{row.dniJugador}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fechaTransaccion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Transaccion</th>
+            <td mat-cell *matCellDef="let row"> {{row.fechaTransaccion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="tipoPagoDescripcion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+            <td mat-cell *matCellDef="let row"> {{row.tipoPagoDescripcion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripcion</th>
+            <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="importe">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Importe</th>
+            <td mat-cell *matCellDef="let row"> {{row.importe}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="pagoManual">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Pago Manual </th>
+            <td mat-cell *matCellDef="let row"> <mat-checkbox color="primary" [checked]="row.pagoManual == 1" disabled> </mat-checkbox> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="pl-4">Acciones</th>
+            <td mat-cell *matCellDef="let row">
+              <a mat-icon-button class="btn-table text-info" (click)="showItem(row)" tooltip="Mostrar info">
+                <mat-icon class="mat-18">reorder</mat-icon>
+              </a>
+              <a mat-icon-button class="btn-table text-warning" (click)="startEdit(row)" tooltip="Editar" [hidden]="row.pagoModificable == 0">
+                <mat-icon aria-label="Edit">edit</mat-icon>
+              </a>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          </tr>
+        </table>
+
+        <div class="no-results" *ngIf="dataSource.data.length == 0">
+          No hay datos
+        </div>
+
+        <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
+    </div>
+
+    <div *ngIf="pagoSeleccionado && !crearPago" class="mt-4">
+      <div class="row">
+        <div class="col-3">
+          <h2>Detalles Pago</h2>
+        </div>
+        <div class="col-9 text-right">
+          <a (click)="volver()" class="btn btn-secondary text-white">Volver al listado</a>
+        </div>
+      </div>
+      <form #editForm="ngForm" (ngSubmit)="save()">
+        <div class="col-6">
+          <label for="selectTipoPago">Tipo</label>
+          <select class="form-control" id="selectTipoPago" (change)="checkIntroducedImport(pagoSeleccionado.importe)" name="tipoPago" #selectTipoPago="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.tipoPago" required>
+            <option *ngFor="let tp of tiposPago" value="{{ tp.id }}">{{ tp.concepto }}</option>
+          </select>
+          <div *ngIf="!selectTipoPago.valid && (selectTipoPago.dirty || selectTipoPago.touched)" class="text-danger">Campo requerido</div>
+        </div>
+        <div *ngIf="editarPago && pagoSeleccionado.tipoPago" class="form-row mt-4">
+          <div class="col">
+            <mat-form-field class="w-25" appearance="fill">
+              <mat-label>Buscar jugador</mat-label>
+              <input type="text"
+                     matInput
+                     [formControl]="dniJugadorControl"
+                     [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="fillContentByDni($event)">
+                <mat-option *ngFor="let option of filteredJugadores | async" [value]="option">
+                  {{option.dni + ' - ' + option.nombre + ' ' + option.primer_apellido + ' ' + option.segundo_apellido}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+        <div *ngIf="pagoSeleccionado.tipoPago && jugadorSeleccionado.id">
+          <div class="form-row mt-4">
+            <div class="col">
+              <label for="inputDniTutor">DNI Tutor</label>
+              <input type="text" class="form-control" id="inputDniTutor" name="dniTutor" #inputDniTutor="ngModel" [(ngModel)]="pagoSeleccionado.dniTutor" readonly>
+              <div *ngIf="!inputDniTutor.valid && (inputDniTutor.dirty || inputDniTutor.touched)" class="text-danger">Campo requerido</div>
+            </div>
+            <div class="col">
+              <label for="inputTutor">Tutor</label>
+              <input type="text" class="form-control" id="inputTutor" name="tutor" #inputTutor="ngModel" [(ngModel)]="pagoSeleccionado.tutor" readonly>
+            </div>
+            <div class="col">
+              <label for="inputDniJugador">DNI Jugador</label>
+              <input type="text" class="form-control" id="inputDniJugador" name="dniJugador" #inputDniJugador="ngModel" [(ngModel)]="pagoSeleccionado.dniJugador" readonly required>
+              <div *ngIf="!inputDniJugador.valid && (inputDniJugador.dirty || inputDniJugador.touched)" class="text-danger">Campo requerido</div>
+            </div>
+            <div class="col">
+              <label for="inputJugador">Jugador</label>
+              <input type="text" class="form-control" id="inputJugador" name="jugador" #inputJugador="ngModel" [(ngModel)]="pagoSeleccionado.jugador" readonly required>
+            </div>
+          </div>
+          <div class="form-row mt-4">
+            <div class="col">
+              <label for="inputIdTransaccion">#Transacción</label>
+              <input type="text" class="form-control" id="inputIdTransaccion" name="idTransaccion" #inputIdTransaccion="ngModel" readonly [(ngModel)]="pagoSeleccionado.idTransaccion">
+            </div>
+            <div class="col">
+              <label for="inputFechaTransaccion">Fecha Transaccion</label>
+              <input type="datetime-local" class="form-control" id="inputFechaTransaccion" name="fechaTransaccion" #inputFechaTransaccion="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.fechaTransaccion" required>
+              <div *ngIf="!inputFechaTransaccion.valid && (inputFechaTransaccion.dirty || inputFechaTransaccion.touched)" class="text-danger">Campo requerido</div>
+            </div>
+            <div class="col">
+              <label for="inputDescripcion">Descripcion</label>
+              <input type="text" class="form-control" id="inputDescripcion" name="descripcion" #inputDescripcion="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.descripcion" required>
+              <div *ngIf="!inputDescripcion.valid && (inputDescripcion.dirty || inputDescripcion.touched)" class="text-danger">Campo requerido</div>
+            </div>
+          </div>
+          <div class="form-row mt-4">
+            <div class="col">
+              <label for="inputCuota">Cuota</label>
+              <input type="number" class="form-control" id="inputCuota" name="cuota" readonly #inputCuota="ngModel" [(ngModel)]="jugadorSeleccionado.quota">
+            </div>
+            <div class="col">
+              <label for="inputImporteRestante">Restante <small *ngIf="pagoSeleccionado.importeOriginal">(con el pago original de {{pagoSeleccionado.importeOriginal}}€)</small></label>
+              <input type="number" class="form-control" id="inputImporteRestante" name="importeRestante" readonly #inputImporteRestante="ngModel" [(ngModel)]="jugadorSeleccionado.importeRestante" required>
+            </div>
+            <div class="col">
+              <label for="inputImporte">Importe</label>
+              <input type="number" min="1" step="25" [max]="jugadorSeleccionado.importeRestante || 999" class="form-control" id="inputImporte" name="importe" [disabled]="!editarPagoManual" (blur)="checkIntroducedImport($event.target.value)" #inputImporte="ngModel" [(ngModel)]="pagoSeleccionado.importe" required>
+              <div *ngIf="!inputImporte.valid && (inputImporte.dirty || inputImporte.touched)" class="text-danger">Campo requerido</div>
+            </div>
+            <div class="col" *ngIf="editarPagoManual">
+              <label for="inputImporteRestanteDespuesPago">Restante Después de pago</label>
+              <input type="number" class="form-control" id="inputImporteRestanteDespuesPago" name="importeRestanteDespuesPago" readonly #inputImporteRestanteDespuesPago="ngModel" [(ngModel)]="jugadorSeleccionado.importeRestanteDespuesPago">
+            </div>
+          </div>
+          <div class="form-row mt-4">
+            <div class="col">
+              <label for="inputPagoCompletado">Pago Completado</label>
+              <select class="form-control" id="inputPagoCompletado" name="pagoCompletado" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.pagoCompletado">
+                <option value="0">NO</option>
+                <option value="1">SI</option>
+              </select>
+            </div>
+            <div class="col">
+              <label for="inputPagoManual">Pago Manual</label>
+              <select class="form-control" id="inputPagoManual" name="pagoManual" [(ngModel)]="pagoSeleccionado.pagoManual" disabled>
+                <option value="0">NO</option>
+                <option value="1">SI</option>
+              </select>
+            </div>
+            <div class="col">
+              <br/>
+              <div class="float-right">
+                <a *ngIf="!editarPagoManual && pagoSeleccionado.pagoModificable == 1" (click)="editar()" class="btn btn-info">Edición</a>
+                <button *ngIf="editarPagoManual" [disabled]="!editForm.form.valid" type="submit" class="btn btn-success">Guardar</button>
+                <a *ngIf="editarPagoManual" (click)="editarPagoManual = false;volver();" class="btn btn-secondary ml-3">Cancelar</a>
+                <div class="btn alert-danger ml-3" *ngIf="error">{{ error }}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+
+    <div *ngIf="crearPago" class="mt-4">
+      <div class="row">
+        <div class="col-3">
+          <h2>Añadir Pago</h2>
+        </div>
+        <div class="col-9 text-right">
+          <a (click)="volver()" class="btn btn-light">Volver al listado</a>
+        </div>
+      </div>
+          <form #addForm="ngForm" class="p-2" (ngSubmit)="store()">
+            <div class="form-row">
+              <div class="col-6">
+                <label for="selectTipoPagoAdd">Tipo</label>
+                <select class="form-control" id="selectTipoPagoAdd" name="tipoPago" #selectTipoPago="ngModel" [(ngModel)]="pagoSeleccionado.tipoPago" required>
+                  <option *ngFor="let tp of tiposPago" value="{{ tp.id }}">{{ tp.concepto }}</option>
+                </select>
+                <div *ngIf="!selectTipoPago.valid && (selectTipoPago.dirty || selectTipoPago.touched)" class="text-danger">Campo requerido</div>
+              </div>
+            </div>
+            <div *ngIf="pagoSeleccionado.tipoPago" class="form-row mt-4">
+              <div class="col">
+                <mat-form-field class="w-25" appearance="fill">
+                  <mat-label>Buscar jugador</mat-label>
+                  <input type="text"
+                         matInput
+                         [formControl]="dniJugadorControl"
+                         [matAutocomplete]="auto">
+                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="fillContentByDni($event)">
+                    <mat-option *ngFor="let option of filteredJugadores | async" [value]="option">
+                      {{option.dni + ' - ' + option.nombre + ' ' + option.primer_apellido + ' ' + option.segundo_apellido}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+            <div *ngIf="pagoSeleccionado.tipoPago && jugadorSeleccionado.id">
+              <div class="form-row mt-4">
+                <div class="col">
+                  <label for="inputAddDniTutor">DNI Tutor</label>
+                  <input type="text" class="form-control" id="inputAddDniTutor" name="dniTutor" #inputAddDniTutor="ngModel" [(ngModel)]="pagoSeleccionado.dniTutor" readonly>
+                </div>
+                <div class="col">
+                  <label for="inputAddTutor">Tutor</label>
+                  <input type="text" class="form-control" id="inputAddTutor" name="tutor" #inputAddTutor="ngModel" [(ngModel)]="pagoSeleccionado.tutor" readonly>
+                </div>
+                <div class="col">
+                  <label for="inputAddDniJugador">DNI Jugador</label>
+                  <input type="text" class="form-control" id="inputAddDniJugador" name="dniJugador" #inputAddDniJugador="ngModel" [(ngModel)]="pagoSeleccionado.dniJugador" readonly required>
+                </div>
+                <div class="col">
+                  <label for="inputAddJugador">Jugador</label>
+                  <input type="text" class="form-control" id="inputAddJugador" name="jugador" #inputAddJugador="ngModel" [(ngModel)]="pagoSeleccionado.jugador" readonly required>
+                </div>
+              </div>
+              <div class="form-row mt-4">
+                <div class="col">
+                  <label for="inputAddIdTransaccion">#Transacción</label>
+                  <input type="text" class="form-control" id="inputAddIdTransaccion" name="idTransaccion" #inputAddIdTransaccion="ngModel" readonly [(ngModel)]="pagoSeleccionado.idTransaccion">
+                </div>
+                <div class="col">
+                  <label for="inputAddFechaTransaccion">Fecha Transaccion</label>
+                  <input type="datetime-local" class="form-control" id="inputAddFechaTransaccion" name="fechaTransaccion" #inputAddFechaTransaccion="ngModel" [(ngModel)]="pagoSeleccionado.fechaTransaccion" required>
+                  <div *ngIf="!inputAddFechaTransaccion.valid && (inputAddFechaTransaccion.dirty || inputAddFechaTransaccion.touched)" class="text-danger">Campo requerido</div>
+                </div>
+                <div class="col">
+                  <label for="inputAddDescripcion">Descripcion</label>
+                  <input type="text" class="form-control" id="inputAddDescripcion" name="descripcion" #inputAddDescripcion="ngModel" [(ngModel)]="pagoSeleccionado.descripcion" required>
+                  <div *ngIf="!inputAddDescripcion.valid && (inputAddDescripcion.dirty || inputAddDescripcion.touched)" class="text-danger">Campo requerido</div>
+                </div>
+              </div>
+              <div class="form-row mt-4">
+                <div class="col">
+                  <label for="inputAddCuota">Cuota</label>
+                  <input type="number" class="form-control" id="inputAddCuota" name="cuota" readonly #inputAddCuota="ngModel" [(ngModel)]="jugadorSeleccionado.quota">
+                </div>
+                <div class="col">
+                  <label for="inputAddImporteRestante">Restante</label>
+                  <input type="number" class="form-control" id="inputAddImporteRestante" name="importeRestante" readonly #inputAddImporteRestante="ngModel" [(ngModel)]="jugadorSeleccionado.importeRestante">
+                </div>
+                <div class="col">
+                  <label for="inputAddImporte">Importe</label>
+                  <input type="number" min="1" step="25" [max]="jugadorSeleccionado.importeRestante || 999" class="form-control" id="inputAddImporte" name="importe" (blur)="checkIntroducedImport($event.target.value)" #inputAddImporte="ngModel" [(ngModel)]="pagoSeleccionado.importe" required>
+                  <div *ngIf="!inputAddImporte.valid && (inputAddImporte.dirty || inputAddImporte.touched)" class="text-danger">Campo Requerido</div>
+                </div>
+                <div class="col">
+                  <label for="inputAddImporteRestanteDespuesPago">Restante Después de pago</label>
+                  <input type="number" class="form-control" id="inputAddImporteRestanteDespuesPago" name="importeRestanteDespuesPago" readonly #inputAddImporteRestanteDespuesPago="ngModel" [(ngModel)]="jugadorSeleccionado.importeRestanteDespuesPago">
+                </div>
+              </div>
+              <div class="form-row mt-4">
+                <div class="col">
+                  <label for="inputAddPagoCompletado">Pago Completado</label>
+                  <select class="form-control" id="inputAddPagoCompletado" name="pagoCompletado" [(ngModel)]="pagoSeleccionado.pagoCompletado">
+                    <option value="0">NO</option>
+                    <option value="1">SI</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <label for="inputAddPagoManual">Pago Manual</label>
+                  <select class="form-control" id="inputAddPagoManual" name="pagoManual" [(ngModel)]="pagoSeleccionado.pagoManual" disabled>
+                    <option value="0">NO</option>
+                    <option value="1">SI</option>
+                  </select>
+                </div>
+                <div class="col">
+                  <br/>
+                  <div class="float-right">
+                    <button [disabled]="!addForm.form.valid" type="submit" class="btn btn-success">Guardar</button>
+                    <a (click)="volver()" class="btn btn-secondary ml-3">Cancelar</a>
+                    <div class="btn alert-danger ml-3" *ngIf="error">{{ error }}</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </form>
+    </div>
+  </mat-tab>
+
+  <!-- Pagos Manuales pendientes -->
+  <mat-tab label="Pagos manuales pendientes" class="p-4" [disabled]="pagoSeleccionado">
+    <div *ngIf="!pagoSeleccionado" class="p-2 mt-4">
+      <mat-form-field>
+        <input matInput #filterNoCompletados type="text" placeholder="Filtrar" (keyup)="applyFilterNoCompletados($event.target.value)">
+      </mat-form-field>
+
+      <mat-form-field class="ml-5">
+        <mat-label>Tipo de movimiento</mat-label>
+        <mat-select [(value)]="tipoMovimiento" (valueChange)="ngOnInit();ngAfterViewInit()">
+          <mat-option [value]="'all'">Todo</mat-option>
+          <mat-option *ngFor="let tipo of tiposPago" [value]="tipo.id">{{tipo.concepto}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="mat-elevation-z8">
+        <mat-spinner [diameter]="50" *ngIf="isLoadingResults"></mat-spinner>
+        <table class="w-100" mat-table [dataSource]="dataSourceNoCompletados" #sortNoCompletados="matSort" matSort>
+
+          <ng-container matColumnDef="tutor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tutor</th>
+            <td mat-cell *matCellDef="let row"> {{row.tutor}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dniTutor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>dniTutor</th>
+            <td mat-cell *matCellDef="let row"> {{row.dniTutor}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="jugador">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Jugador</th>
+            <td mat-cell *matCellDef="let row"> {{row.jugador}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dniJugador">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>dniJugador</th>
+            <td mat-cell *matCellDef="let row"> {{row.dniJugador}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fechaTransaccion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Transaccion</th>
+            <td mat-cell *matCellDef="let row"> {{row.fechaTransaccion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="tipoPagoDescripcion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+            <td mat-cell *matCellDef="let row"> {{row.tipoPagoDescripcion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripcion</th>
+            <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="importe">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Importe</th>
+            <td mat-cell *matCellDef="let row"> {{row.importe}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="pagoManual">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Pago Manual </th>
+            <td mat-cell *matCellDef="let row"> <mat-checkbox color="primary" [checked]="row.pagoManual == 1" disabled> </mat-checkbox> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="pl-4">Acciones</th>
+            <td mat-cell *matCellDef="let row">
+              <a mat-icon-button class="btn-table text-info" (click)="showItem(row)" tooltip="Mostrar info">
+                <mat-icon class="mat-18">reorder</mat-icon>
+              </a>
+              <a mat-icon-button class="btn-table text-warning" (click)="completar(row)" tooltip="Completar Pago">
+                <mat-icon aria-label="Edit">done</mat-icon>
+              </a>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          </tr>
+        </table>
+
+        <div class="no-results" *ngIf="dataSourceNoCompletados.data.length == 0">
+          No hay datos
+        </div>
+
+        <mat-paginator #paginatorNoCompletados [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
+    </div>
+
+    <div *ngIf="pagoSeleccionado && !crearPago" class="mt-4">
+      <div class="row">
+        <div class="col-3">
+          <h2>Detalles Pago</h2>
+        </div>
+        <div class="col-9 text-right">
+          <a (click)="volver()" class="btn btn-secondary text-white">Volver al listado</a>
+        </div>
+      </div>
+      <form #editForm="ngForm" (ngSubmit)="save()">
+        <div *ngIf="editarPago" class="form-row">
+          <div class="col">
+            <mat-form-field class="w-25" appearance="fill">
+              <mat-label>Buscar jugador</mat-label>
+              <input type="text"
+                     matInput
+                     [formControl]="dniJugadorControl"
+                     [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="fillContentByDni($event)">
+                <mat-option *ngFor="let option of filteredJugadores | async" [value]="option">
+                  {{option.dni + ' - ' + option.nombre + ' ' + option.primer_apellido + ' ' + option.segundo_apellido}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="form-row mt-4">
+          <div class="col">
+            <label for="inputDniTutor">DNI Tutor</label>
+            <input type="text" class="form-control" id="inputDniTutor" name="dniTutor" #inputDniTutor="ngModel" [(ngModel)]="pagoSeleccionado.dniTutor" readonly required>
+            <div *ngIf="!inputDniTutor.valid && (inputDniTutor.dirty || inputDniTutor.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputTutor">Tutor</label>
+            <input type="text" class="form-control" id="inputTutor" name="tutor" #inputTutor="ngModel" [(ngModel)]="pagoSeleccionado.tutor" readonly required>
+          </div>
+          <div class="col">
+            <label for="inputDniJugador">DNI Jugador</label>
+            <input type="text" class="form-control" id="inputDniJugador" name="dniJugador" #inputDniJugador="ngModel" [(ngModel)]="pagoSeleccionado.dniJugador" readonly required>
+            <div *ngIf="!inputDniJugador.valid && (inputDniJugador.dirty || inputDniJugador.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputJugador">Jugador</label>
+            <input type="text" class="form-control" id="inputJugador" name="jugador" #inputJugador="ngModel" [(ngModel)]="pagoSeleccionado.jugador" readonly required>
+          </div>
+        </div>
+        <div class="form-row mt-4">
+          <div class="col">
+            <label for="inputIdTransaccion">#Transacción</label>
+            <input type="text" class="form-control" id="inputIdTransaccion" name="idTransaccion" #inputIdTransaccion="ngModel" readonly [(ngModel)]="pagoSeleccionado.idTransaccion">
+          </div>
+          <div class="col">
+            <label for="inputFechaTransaccion">Fecha Transaccion</label>
+            <input type="datetime-local" class="form-control" id="inputFechaTransaccion" name="fechaTransaccion" #inputFechaTransaccion="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.fechaTransaccion" required>
+            <div *ngIf="!inputFechaTransaccion.valid && (inputFechaTransaccion.dirty || inputFechaTransaccion.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="selectTipoPago">Tipo</label>
+            <select class="form-control" id="selectTipoPago" name="tipoPago" #selectTipoPago="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.tipoPago" required>
+              <option *ngFor="let tp of tiposPago" value="{{ tp.id }}">{{ tp.concepto }}</option>
+            </select>
+            <div *ngIf="!selectTipoPago.valid && (selectTipoPago.dirty || selectTipoPago.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputDescripcion">Descripcion</label>
+            <input type="text" class="form-control" id="inputDescripcion" name="descripcion" #inputDescripcion="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.descripcion" required>
+            <div *ngIf="!inputDescripcion.valid && (inputDescripcion.dirty || inputDescripcion.touched)" class="text-danger">Campo requerido</div>
+          </div>
+        </div>
+        <div class="form-row mt-4">
+          <div class="col">
+            <label for="inputImporte">Importe</label>
+            <input type="number" min="1" step="25" [max]="jugadorSeleccionado.importeRestante || 999" class="form-control" id="inputImporte" name="importe" [disabled]="!editarPagoManual" (blur)="checkIntroducedImport($event.target.value)" #inputImporte="ngModel" [(ngModel)]="pagoSeleccionado.importe" required>
+            <div *ngIf="!inputImporte.valid && (inputImporte.dirty || inputImporte.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputPagoCompletado">Pago Completado</label>
+            <select class="form-control" id="inputPagoCompletado" name="pagoCompletado" disabled [(ngModel)]="pagoSeleccionado.pagoCompletado">
+              <option value="0">NO</option>
+              <option value="1">SI</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="inputPagoManual">Pago Manual</label>
+            <select class="form-control" id="inputPagoManual" name="pagoManual" [(ngModel)]="pagoSeleccionado.pagoManual" disabled>
+              <option value="0">NO</option>
+              <option value="1">SI</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+  </mat-tab>
+
+  <!-- Pagos Online erroneos -->
+  <mat-tab label="Pagos online erroneos" class="p-4" [disabled]="pagoSeleccionado">
+    <div *ngIf="!pagoSeleccionado" class="p-2 mt-4">
+      <mat-form-field>
+        <input matInput #filterFallido type="text" placeholder="Filtrar" (keyup)="applyFilterFallidos($event.target.value)">
+      </mat-form-field>
+
+      <mat-form-field class="ml-5">
+        <mat-label>Tipo de movimiento</mat-label>
+        <mat-select [(value)]="tipoMovimiento" (valueChange)="ngOnInit();ngAfterViewInit()">
+          <mat-option [value]="'all'">Todo</mat-option>
+          <mat-option *ngFor="let tipo of tiposPago" [value]="tipo.id">{{tipo.concepto}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+
+      <div class="mat-elevation-z8">
+        <mat-spinner [diameter]="50" *ngIf="isLoadingResults"></mat-spinner>
+        <table class="w-100" mat-table [dataSource]="dataSourceFallidos" #sortFallidos="matSort" matSort>
+
+          <ng-container matColumnDef="tutor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tutor</th>
+            <td mat-cell *matCellDef="let row"> {{row.tutor}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dniTutor">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>DNI Tutor</th>
+            <td mat-cell *matCellDef="let row"> {{row.dniTutor}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="jugador">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Jugador</th>
+            <td mat-cell *matCellDef="let row"> {{row.jugador}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="dniJugador">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>DNI Jugador</th>
+            <td mat-cell *matCellDef="let row"> {{row.dniJugador}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="fechaTransaccion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Fecha Transaccion</th>
+            <td mat-cell *matCellDef="let row"> {{row.fechaTransaccion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="tipoPagoDescripcion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo</th>
+            <td mat-cell *matCellDef="let row"> {{row.tipoPagoDescripcion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="descripcion">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Descripcion</th>
+            <td mat-cell *matCellDef="let row"> {{row.descripcion}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="importe">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>Importe</th>
+            <td mat-cell *matCellDef="let row"> {{row.importe}} </td>
+          </ng-container>
+
+          <ng-container matColumnDef="pagoManual">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Pago Manual </th>
+            <td mat-cell *matCellDef="let row"> <mat-checkbox color="primary" [checked]="row.pagoManual == 1" disabled> </mat-checkbox> </td>
+          </ng-container>
+
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef class="pl-4">Acciones</th>
+            <td mat-cell *matCellDef="let row">
+              <a mat-icon-button class="btn-table text-info" (click)="showItem(row)" tooltip="Mostrar info">
+                <mat-icon class="mat-18">reorder</mat-icon>
+              </a>
+              <!--<a mat-icon-button class="btn-table text-warning" (click)="completar(row)" tooltip="Completar Pago">
+                <mat-icon aria-label="Edit">done</mat-icon>
+              </a>-->
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumnsFallidos"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumnsFallidos;">
+          </tr>
+        </table>
+
+        <div class="no-results" *ngIf="dataSourceFallidos.data.length == 0">
+          No hay datos
+        </div>
+
+        <mat-paginator #paginatorFallidos [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+      </div>
+    </div>
+
+
+    <div *ngIf="pagoSeleccionado && !crearPago" class="mt-4">
+      <div class="row">
+        <div class="col-3">
+          <h2>Detalles Pago</h2>
+        </div>
+        <div class="col-9 text-right">
+          <a (click)="volver()" class="btn btn-secondary text-white">Volver al listado</a>
+        </div>
+      </div>
+      <form #editForm="ngForm" (ngSubmit)="save()">
+        <div *ngIf="editarPago" class="form-row">
+          <div class="col">
+            <mat-form-field class="w-25" appearance="fill">
+              <mat-label>Buscar jugador</mat-label>
+              <input type="text"
+                     matInput
+                     [formControl]="dniJugadorControl"
+                     [matAutocomplete]="auto">
+              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="fillContentByDni($event)">
+                <mat-option *ngFor="let option of filteredJugadores | async" [value]="option">
+                  {{option.dni + ' - ' + option.nombre + ' ' + option.primer_apellido + ' ' + option.segundo_apellido}}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          </div>
+        </div>
+        <div class="form-row mt-4">
+          <div class="col">
+            <label for="inputDniTutor">DNI Tutor</label>
+            <input type="text" class="form-control" id="inputDniTutor" name="dniTutor" #inputDniTutor="ngModel" [(ngModel)]="pagoSeleccionado.dniTutor" readonly required>
+            <div *ngIf="!inputDniTutor.valid && (inputDniTutor.dirty || inputDniTutor.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputTutor">Tutor</label>
+            <input type="text" class="form-control" id="inputTutor" name="tutor" #inputTutor="ngModel" [(ngModel)]="pagoSeleccionado.tutor" readonly required>
+          </div>
+          <div class="col">
+            <label for="inputDniJugador">DNI Jugador</label>
+            <input type="text" class="form-control" id="inputDniJugador" name="dniJugador" #inputDniJugador="ngModel" [(ngModel)]="pagoSeleccionado.dniJugador" readonly required>
+            <div *ngIf="!inputDniJugador.valid && (inputDniJugador.dirty || inputDniJugador.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputJugador">Jugador</label>
+            <input type="text" class="form-control" id="inputJugador" name="jugador" #inputJugador="ngModel" [(ngModel)]="pagoSeleccionado.jugador" readonly required>
+          </div>
+        </div>
+        <div class="form-row mt-4">
+          <div class="col">
+            <label for="inputIdTransaccion">#Transacción</label>
+            <input type="text" class="form-control" id="inputIdTransaccion" name="idTransaccion" #inputIdTransaccion="ngModel" readonly [(ngModel)]="pagoSeleccionado.idTransaccion">
+          </div>
+          <div class="col">
+            <label for="inputFechaTransaccion">Fecha Transaccion</label>
+            <input type="datetime-local" class="form-control" id="inputFechaTransaccion" name="fechaTransaccion" #inputFechaTransaccion="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.fechaTransaccion" required>
+            <div *ngIf="!inputFechaTransaccion.valid && (inputFechaTransaccion.dirty || inputFechaTransaccion.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="selectTipoPago">Tipo</label>
+            <select class="form-control" id="selectTipoPago" name="tipoPago" #selectTipoPago="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.tipoPago" required>
+              <option *ngFor="let tp of tiposPago" value="{{ tp.id }}">{{ tp.concepto }}</option>
+            </select>
+            <div *ngIf="!selectTipoPago.valid && (selectTipoPago.dirty || selectTipoPago.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputDescripcion">Descripcion</label>
+            <input type="text" class="form-control" id="inputDescripcion" name="descripcion" #inputDescripcion="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.descripcion" required>
+            <div *ngIf="!inputDescripcion.valid && (inputDescripcion.dirty || inputDescripcion.touched)" class="text-danger">Campo requerido</div>
+          </div>
+        </div>
+        <div class="form-row mt-4">
+          <div class="col">
+            <label for="inputImporte">Importe</label>
+            <input type="number" min="1" step="25" [max]="jugadorSeleccionado.importeRestante || 999" class="form-control" id="inputImporte" name="importe" [disabled]="!editarPagoManual" (blur)="checkIntroducedImport($event.target.value)" #inputImporte="ngModel" [(ngModel)]="pagoSeleccionado.importe" required>
+            <div *ngIf="!inputImporte.valid && (inputImporte.dirty || inputImporte.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputPagoCompletado">Pago Completado</label>
+            <select class="form-control" id="inputPagoCompletado" name="pagoCompletado" disabled [(ngModel)]="pagoSeleccionado.pagoCompletado">
+              <option value="0">NO</option>
+              <option value="1">SI</option>
+            </select>
+          </div>
+          <div class="col">
+            <label for="inputPagoManual">Pago Manual</label>
+            <select class="form-control" id="inputPagoManual" name="pagoManual" [(ngModel)]="pagoSeleccionado.pagoManual" disabled>
+              <option value="0">NO</option>
+              <option value="1">SI</option>
+            </select>
+          </div>
+        </div>
+      </form>
+    </div>
+
+  </mat-tab>
+</mat-tab-group>
+<ngx-spinner
+  bdColor = "rgba(51,51,51,0.8)"
+  size = "medium"
+  color = "#fff"
+  type = "ball-climbing-dot"
+  [fullScreen] = "true"
+>
+  <p style="color: white" > Espere por favor... </p>
+</ngx-spinner>

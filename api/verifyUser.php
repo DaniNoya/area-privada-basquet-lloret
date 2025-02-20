@@ -16,7 +16,7 @@
       $usernameUser = $userCredentials->username;
       $passwdUser = $userCredentials->passwd;
 
-      $queryUser = "SELECT * FROM usuario WHERE username = '$usernameUser'";   
+      $queryUser = "SELECT * FROM usuario WHERE username = '$usernameUser'";
       if ($resultQueryUser = mysqli_query($con, $queryUser)) {
         if ($resultQueryUser->num_rows > 0) {
           $userData = mysqli_fetch_array($resultQueryUser, MYSQLI_ASSOC);

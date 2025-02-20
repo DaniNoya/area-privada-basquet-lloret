@@ -1,0 +1,9 @@
+<div class="container">
+  <h3 md-dialog-title>Introduce la contraseña para poder editar</h3>
+  <div class="mt-4" style="display: flex; justify-content: space-around;">
+    <input #passw type="password" placeholder="Contraseña">
+  </div>
+  <div md-dialog-actions class="mt-4">
+    <button md-button class="btn btn-success float-right" (click)="checkPassword(passw.value)">Confirmar</button>
+  </div>
+</div>

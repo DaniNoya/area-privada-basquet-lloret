@@ -1,0 +1,7 @@
+<h2 md-dialog-title>¿Estás seguro?</h2>
+<div md-dialog-content>{{confirmMessage}}</div>
+<small>{{confirmMessage2}}</small>
+<div md-dialog-actions class="mt-4">
+  <button md-button class="btn btn-success float-left" (click)="dialogRef.close(true)">Confirmar</button>
+  <button md-button class="btn btn-danger float-right" (click)="dialogRef.close(false)">Cancelar</button>
+</div>

@@ -18,10 +18,10 @@ switch ($_SERVER['REQUEST_METHOD']) {
     $idUsuario = $params->idUsuario;
 
     // $sql = "SELECT p.*, s.* FROM persona p INNER JOIN socio s ON p.id = s.id_persona WHERE p.id = '$idUsuario'"; str_replace("-", "/", $socioData['temporada']);
-    $sql = "SELECT p.*, s.*, (SELECT temporada FROM cblloretdb.temporada t WHERE t.id = st.id_temporada) as temporada 
-            FROM cblloretdb.persona p 
-            INNER JOIN cblloretdb.socio s ON p.id = s.id_persona 
-            INNER JOIN cblloretdb.socio_temporada st ON s.id = st.id_socio
+    $sql = "SELECT p.*, s.*, (SELECT temporada FROM temporada t WHERE t.id = st.id_temporada) as temporada 
+            FROM persona p 
+            INNER JOIN socio s ON p.id = s.id_persona 
+            INNER JOIN socio_temporada st ON s.id = st.id_socio
             WHERE p.id = '$idUsuario' AND st.id_temporada =(SELECT MAX(t.id) FROM temporada t);";
     if ($result = mysqli_query($con, $sql)) {
       $socioData = mysqli_fetch_array($result, MYSQLI_ASSOC);

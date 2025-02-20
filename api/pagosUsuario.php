@@ -64,11 +64,11 @@
                 $sqlConsultJugadorTemporada = "SELECT * FROM jugador_temporada WHERE idJugador = (SELECT id FROM persona WHERE dni = '$dniJugador') AND idTipo = $tipo_pago;";
                 if ($resultJugadorTemporada = mysqli_query($con, $sqlConsultJugadorTemporada)) {
                     $jugadorTemporadaData = mysqli_fetch_array($resultJugadorTemporada, MYSQLI_ASSOC);
-                    $quota = $jugadorTemporadaData['quota'];
+                    $quota = isset($jugadorTemporadaData['quota']) ? $jugadorTemporadaData['quota'] : null;
                 }
 
                 if ($quota == '' || $quota == null) {
-                    $sqlConsultSocioTemporada = "SELECT * FROM cblloretdb.socio_temporada st WHERE st.id_socio = (SELECT s.id FROM cblloretdb.socio s WHERE s.id_persona = '$idUsuario');";
+                    $sqlConsultSocioTemporada = "SELECT * FROM socio_temporada st WHERE st.id_socio = (SELECT s.id FROM socio s WHERE s.id_persona = '$idUsuario');";
                     if ($resultSocioTemporada = mysqli_query($con, $sqlConsultSocioTemporada)) {
                         $socioTemporadaData = mysqli_fetch_array($resultSocioTemporada, MYSQLI_ASSOC);
                         $quota = $socioTemporadaData['quota'];
