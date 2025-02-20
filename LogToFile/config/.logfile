@@ -1,0 +1,9 @@
+
+<?php
+
+//$loggerDirectory = __DIR__.'../logs/';
+
+
+return [
+'loggerDirectory' => __DIR__ . "./../logs/"
+];
