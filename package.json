@@ -3,8 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "cross-env NODE_OPTIONS=--openssl-legacy-provider ng serve --open",
-    "build": "cd ./Client && ng build",
+    "build": "set NODE_OPTIONS=--openssl-legacy-provider && ng build",
+    "start": "set NODE_OPTIONS=--openssl-legacy-provider && ng serve",
     "test": "cd ./Client && ng test",
     "lint": "cd ./Client && ng lint",
     "e2e": "cd ./Client && ng e2e"

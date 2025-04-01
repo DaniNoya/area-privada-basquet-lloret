@@ -30,7 +30,7 @@ function obtenerImportes($con, $concepto) {
 }
 
 // Función para verificar si es socio del club
-function esSocioClub($con, $dni, $temporadaId = 6) {
+function esSocioClub($con, $dni, $temporadaId = 7) {
     $query = "SELECT * FROM persona WHERE dni = '$dni' AND id IN (
                 SELECT id_persona FROM socio WHERE id IN (
                     SELECT id_socio FROM socio_temporada WHERE id_temporada = $temporadaId
@@ -60,11 +60,27 @@ function comprobarTemporadaPasada($con, $dni) {
     }
 }
 
-// Función para verificar si son hermanos
+// Función para verificar si son hermanos - this needs to be more robust
 function comprobarHermanos($playersSurnamesData) {
-    return count($playersSurnamesData) > 1 && count(array_unique($playersSurnamesData)) === 1;
+    // Only consider it siblings if there are multiple players and they share the same surname
+    if (count($playersSurnamesData) <= 1) {
+        return false;
+    }
+    
+    // Count occurrences of each surname
+    $surnameCount = array_count_values($playersSurnamesData);
+    
+    // If any surname appears more than once, we have siblings
+    foreach ($surnameCount as $count) {
+        if ($count > 1) {
+            return true;
+        }
+    }
+    
+    return false;
 }
 
+// Modify the calculation logic to ensure consistent discount application
 $playersSurnames = [];
 foreach ($registrationPlayers as $player) {
     $firstSurname = "";
@@ -74,11 +90,25 @@ foreach ($registrationPlayers as $player) {
         if ($key == "segonCognomJugador") $secondSurname = strtolower(trim($value));
     }
 
-    $fullSurname = str_replace(" ", "", $firstSurname) + str_replace(" ", "", $secondSurname);
-    $playersSurnames[] = $fullSurname;
+    // Only use first surname for sibling check to be more reliable
+    $playersSurnames[] = str_replace(" ", "", $firstSurname);
 }
 
+// Initialize these properties before the foreach loop
+$importe->amountOnline = 0;
+$importe->amountPresencial = 0;
+$importe->amountOnlineInscription = 0;
+$importe->amountDiscountAreBrothers = 0;
+$importe->amountSinglePaymentDiscount = 0;
+$importe->amountDiscountIsMember = 0;
+
+// Check for siblings once before processing individual players
+$sonGermans = comprobarHermanos($playersSurnames);
+
+// Calculate total amount for all players
+$totalAmount = 0;
 $players = [];
+
 foreach ($registrationPlayers as $player) {
     $namePlayer = "";
     $dniPlayer = "";
@@ -110,7 +140,7 @@ foreach ($registrationPlayers as $player) {
         $importe->temporadaImporte = $temporadaImporte;
     }
 
-    $sonGermans = comprobarHermanos($playersSurnames);
+    // Use the sibling status determined once for all players
     $importe->sonHermanos = $sonGermans;
 
     $isSocioClub = esSocioClub($con, $isMas18 ? $dniPlayer : $dniTutor);
@@ -119,34 +149,45 @@ foreach ($registrationPlayers as $player) {
     $temporadaPasadaStatus = comprobarTemporadaPasada($con, $dniPlayer);
     $importe->temporadaPasada = $temporadaPasadaStatus;
 
+    // Start with the base price
     $precioUnitario = $precioQuotaAnual;
 
+    // Apply previous season discount first if applicable
     if ($temporadaPasadaStatus === "OK") {
         $precioUnitario -= $precioDescuentoAnioPasado;
     }
 
-    // Calcular descuentos
-    $precioTotalPagar = $precioUnitario;
-    $precioDescunetHermano = $sonGermans ? ($precioUnitario * $porcentajeDescuentoSonHermanos) / 100 : 0;
-    $precioDescunetPagoUnico = ($precioUnitario * $porcentajeDescuentoPagoUnico) / 100;
-    $precioDescunetEsSocio = $isSocioClub ? ($precioUnitario * $porcentajeDescuentoEsSocio) / 100 : 0;
+    // Calculate all discounts based on the adjusted base price
+    $precioDescunetHermano = $sonGermans ? round(($precioUnitario * $porcentajeDescuentoSonHermanos) / 100, 2) : 0;
+    $precioDescunetPagoUnico = round(($precioUnitario * $porcentajeDescuentoPagoUnico) / 100, 2);
+    $precioDescunetEsSocio = $isSocioClub ? round(($precioUnitario * $porcentajeDescuentoEsSocio) / 100, 2) : 0;
 
+    // Store discount values
     $importe->precioDescunetHermano = $precioDescunetHermano;
     $importe->precioDescunetPagoUnico = $precioDescunetPagoUnico;
     $importe->precioDescunetEsSocio = $precioDescunetEsSocio;
 
-    $precioTotalPagar -= ($precioDescunetPagoUnico + $precioDescunetHermano + $precioDescunetEsSocio);
+    // Calculate total discount
+    $totalDiscount = $precioDescunetPagoUnico + $precioDescunetHermano + $precioDescunetEsSocio;
+    
+    // Apply all discounts to get final price
+    $precioTotalPagar = round($precioUnitario - $totalDiscount, 2);
+    
+    // Add to total amount
+    $totalAmount += $precioTotalPagar;
+    
+    // Set individual player amount
     $importe->importe = $precioTotalPagar;
-
-    $restante = 0;
-    $importe->restante = $restante;
+    $importe->restante = 0;
     $importe->importeInscripcion = $precioInscripcion;
     $importe->total = $precioTotalPagar;
 
+    // Calculate other values
     $importeUnitarioFinalOnlineIns = $precioTotalPagar + $precioDescunetPagoUnico;
     $importeUnitarioFinalPresencial = $precioTotalPagar + $precioDescunetPagoUnico;
     $restanteInscripcion = ($precioTotalPagar + $precioDescunetPagoUnico) - $precioInscripcion;
 
+    // Create player data structure
     $playerData = [
         'fullname' => $namePlayer.' '.$firstSurnamePlayer,
         'dni' => $dniPlayer,
@@ -154,7 +195,7 @@ foreach ($registrationPlayers as $player) {
             "importeUnitario" => $precioUnitario,
             "importeUnitarioFinalOnline" => $precioTotalPagar,
             "importeUnitarioFinalPresencial" => $importeUnitarioFinalPresencial,
-            "restante" => $restante,
+            "restante" => 0,
             "priceDesHermanos" => $precioDescunetHermano,
             "priceDesPagoUnico" => $precioDescunetPagoUnico,
             "priceDesEsSocio" => $precioDescunetEsSocio
@@ -164,10 +205,15 @@ foreach ($registrationPlayers as $player) {
             "importeUnitarioFinalOnline" => $importeUnitarioFinalOnlineIns,
             "importeUnitarioFinalPresencial" => $importeUnitarioFinalPresencial,
             "restante" => $restanteInscripcion
-        ]
+        ],
+        'temporadaPasada' => $temporadaPasadaStatus,
+        'isSocioClub' => $isSocioClub,
+        'sonHermanos' => $sonGermans
     ];
     
     $players[] = $playerData;
+    
+    // Accumulate totals
     $importe->amountOnline += $precioTotalPagar;
     $importe->amountPresencial += $importeUnitarioFinalPresencial;
     $importe->amountOnlineInscription += $precioInscripcion;
@@ -175,6 +221,9 @@ foreach ($registrationPlayers as $player) {
     $importe->amountSinglePaymentDiscount += $precioDescunetPagoUnico;
     $importe->amountDiscountIsMember += $precioDescunetEsSocio;
 }
+
+// Set the total amount for all players
+$importe->total = $totalAmount;
 
 $importe->players = $players;
 echo json_encode(['importe' => $importe]);
