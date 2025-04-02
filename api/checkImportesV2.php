@@ -60,7 +60,7 @@ function comprobarTemporadaPasada($con, $dni) {
     }
 }
 
-// Función para verificar si son hermanos - this needs to be more robust
+// Función para verificar si son hermanos
 function comprobarHermanos($playersSurnamesData) {
     // Only consider it siblings if there are multiple players and they share the same surname
     if (count($playersSurnamesData) <= 1) {
