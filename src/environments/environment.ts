@@ -4,7 +4,7 @@
 
 export const environment = {
   production: false,
-  API_URL: 'http://localhost/test_basquetlloret/areaprivada/api'
+  API_URL: 'http://localhost/basquetlloretWP/areaprivada/api'
 };
 
 /*

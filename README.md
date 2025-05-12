@@ -16,7 +16,7 @@ Este proyecto es una aplicación web para el club de baloncesto Basquet Lloret, 
      ```typescript
      export const environment = {
        production: false,
-       API_URL: 'http://localhost/test_basquetlloret/areaprivada/api'
+       API_URL: 'http://localhost/basquetlloretWP/areaprivada/api'
      };
      ```
    - **Producción**: Modifica el archivo `src/environments/environment.prod.ts` para establecer `API_URL`:

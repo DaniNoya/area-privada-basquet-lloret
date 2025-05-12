@@ -41,6 +41,7 @@
     "req-flash": "0.0.3",
     "rxjs": "~6.3.3",
     "tslib": "^1.9.3",
+    "xlsx": "^0.18.5",
     "zone.js": "~0.8.26"
   },
   "devDependencies": {

@@ -96,7 +96,7 @@
           </tr>
         </table>
 
-        <div class="no-results" *ngIf="dataSource.data.length == 0">
+        <div class="no-results" *ngIf="dataSource?.data?.length == 0">
           No hay datos
         </div>
 
@@ -165,7 +165,7 @@
             </div>
             <div class="col">
               <label for="inputFechaTransaccion">Fecha Transaccion</label>
-              <input type="datetime-local" class="form-control" id="inputFechaTransaccion" name="fechaTransaccion" #inputFechaTransaccion="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.fechaTransaccion" required>
+              <input type="text" class="form-control" id="inputFechaTransaccion" name="fechaTransaccion" #inputFechaTransaccion="ngModel" [disabled]="!editarPagoManual" [(ngModel)]="pagoSeleccionado.fechaTransaccion" required>
               <div *ngIf="!inputFechaTransaccion.valid && (inputFechaTransaccion.dirty || inputFechaTransaccion.touched)" class="text-danger">Campo requerido</div>
             </div>
             <div class="col">
@@ -421,7 +421,7 @@
           </tr>
         </table>
 
-        <div class="no-results" *ngIf="dataSourceNoCompletados.data.length == 0">
+        <div class="no-results" *ngIf="dataSourceNoCompletados?.data?.length == 0">
           No hay datos
         </div>
 
@@ -604,7 +604,7 @@
           </tr>
         </table>
 
-        <div class="no-results" *ngIf="dataSourceFallidos.data.length == 0">
+        <div class="no-results" *ngIf="dataSourceFallidos?.data?.length == 0">
           No hay datos
         </div>
 

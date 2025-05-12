@@ -10,6 +10,9 @@ import { AppRoutingModule } from './app.routing';
 // ngx-spinner
 import { NgxSpinnerModule } from 'ngx-spinner';
 
+// Excel export
+import * as XLSX from 'xlsx';
+
 // Components aplicació
 import { AppComponent } from './app.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
@@ -19,6 +22,7 @@ import { JugadoresComponent } from './dashboard/jugadores/jugadores.component';
 import { FamiliaresComponent } from './dashboard/familiares/familiares.component';
 import { EntrenadoresComponent } from './dashboard/entrenadores/entrenadores.component';
 import { DirectivosComponent } from './dashboard/directivos/directivos.component';
+import { CampusJugadorComponent } from './dashboard/campus-jugador/campus-jugador.component';
 import { FamiliaresDialogComponent } from './dashboard/dialogs/familiares-dialog/familiares-dialog.component';
 import { ConfirmDialogComponent } from './dashboard/dialogs/confirm-dialog/confirm-dialog.component';
 import { ErrorDialogComponent } from './dashboard/dialogs/error-dialog/error-dialog.component';
@@ -52,6 +56,7 @@ import {ImageUploadModule} from 'ng2-imageupload';
 
 // Serveis
 import {LoginService} from './login/login.service';
+import {GlobalService} from './dashboard/global.service';
 import { ImagenesComponent } from './dashboard/imagenes/imagenes.component';
 import { NoticiasComponent } from './dashboard/noticias/noticias.component';
 import { PerfilComponent } from './dashboard/perfil/perfil.component';
@@ -59,6 +64,7 @@ import { DescuentosComponent } from './dashboard/descuentos/descuentos.component
 import { PagosComponent } from './dashboard/pagos/pagos.component';
 import { PagosUsuarioComponent } from './dashboard/pagos-usuario/pagos-usuario.component';
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import {MatSnackBarModule} from '@angular/material/snack-bar';
 import { ImportesComponent } from './dashboard/importes/importes.component';
 import { PagosUsuarioDialogComponent } from './dashboard/dialogs/pagos-usuario-dialog/pagos-usuario-dialog.component';
 import { ValidarPermisoComponent } from './dashboard/dialogs/validar-permiso/validar-permiso.component';
@@ -89,6 +95,7 @@ export function jwtOptionsFactory(tokenService) {
     FamiliaresComponent,
     EntrenadoresComponent,
     DirectivosComponent,
+    CampusJugadorComponent,
     FamiliaresDialogComponent,
     ConfirmDialogComponent,
     ErrorDialogComponent,
@@ -150,10 +157,12 @@ export function jwtOptionsFactory(tokenService) {
         AngularEditorModule,
         ImageUploadModule,
         SidebarModule.forRoot(),
-        MatAutocompleteModule
+        MatAutocompleteModule,
+        MatSnackBarModule
     ],
   providers: [
-    LoginService
+    LoginService,
+    GlobalService
   ],
   bootstrap: [
     AppComponent

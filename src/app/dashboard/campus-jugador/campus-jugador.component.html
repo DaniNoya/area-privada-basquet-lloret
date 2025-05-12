@@ -1,0 +1,120 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-12">
+      <mat-card>
+        <mat-card-header>
+          <mat-card-title>Jugadores Casal d'Estiu</mat-card-title>
+          <mat-card-subtitle>Listado de jugadores inscritos en el Casal d'Estiu con sus semanas</mat-card-subtitle>
+        </mat-card-header>
+
+        <mat-card-content>
+          <!-- Filtros -->
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <mat-form-field class="w-100">
+                <input matInput [formControl]="filtroNombre" placeholder="Filtrar por nombre o apellidos" #filtrar>
+                <button mat-button *ngIf="filtroNombre.value" matSuffix mat-icon-button aria-label="Clear" (click)="filtroNombre.setValue('')">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4">
+              <mat-form-field class="w-100">
+                <mat-label>Filtrar por semana</mat-label>
+                <mat-select [formControl]="filtroSemana">
+                  <mat-option [value]="0">Todas las semanas</mat-option>
+                  <mat-option *ngFor="let semana of semanas" [value]="semana.id">
+                    {{ semana.nombre }}
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
+            <div class="col-md-4 d-flex align-items-center">
+              <button mat-raised-button color="primary" (click)="limpiarFiltros()" class="mr-2">
+                <mat-icon>filter_list</mat-icon> Limpiar filtros
+              </button>
+              <button mat-raised-button color="accent" (click)="exportarExcel()">
+                <mat-icon>file_download</mat-icon> Exportar a Excel
+              </button>
+            </div>
+          </div>
+
+          <!-- Tabla de jugadores -->
+          <div class="mat-elevation-z8 table-container">
+            <table mat-table [dataSource]="dataSource" matSort>
+
+              <!-- Nombre Column -->
+              <ng-container matColumnDef="nombre">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+                <td mat-cell *matCellDef="let jugador"> {{jugador.nombre}} </td>
+              </ng-container>
+
+              <!-- Primer Apellido Column -->
+              <ng-container matColumnDef="primer_apellido">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Primer Apellido </th>
+                <td mat-cell *matCellDef="let jugador"> {{jugador.primer_apellido}} </td>
+              </ng-container>
+
+              <!-- Segundo Apellido Column -->
+              <ng-container matColumnDef="segundo_apellido">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Segundo Apellido </th>
+                <td mat-cell *matCellDef="let jugador"> {{jugador.segundo_apellido}} </td>
+              </ng-container>
+
+              <!-- Fecha Nacimiento Column -->
+              <ng-container matColumnDef="fecha_nacimiento">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Nacimiento </th>
+                <td mat-cell *matCellDef="let jugador"> {{jugador.fecha_nacimiento | date:'dd/MM/yyyy'}} </td>
+              </ng-container>
+
+              <!-- Sexo Column -->
+              <ng-container matColumnDef="sexo">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header> Sexo </th>
+                <td mat-cell *matCellDef="let jugador"> {{jugador.sexo}} </td>
+              </ng-container>
+
+              <!-- Semanas Column -->
+              <ng-container matColumnDef="semanas">
+                <th mat-header-cell *matHeaderCellDef> Semanas </th>
+                <td mat-cell *matCellDef="let jugador"> 
+                  <span *ngIf="jugador.semanas && jugador.semanas.length > 0">
+                    {{ obtenerSemanasTexto(jugador) }}
+                  </span>
+                  <span *ngIf="!jugador.semanas || jugador.semanas.length === 0">
+                    Ninguna
+                  </span>
+                </td>
+              </ng-container>
+
+              <!-- Actions Column -->
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef> Acciones (NO IMPLEMENTADO) </th>
+                <td mat-cell *matCellDef="let jugador">
+                  <button mat-icon-button color="primary" matTooltip="Ver detalles">
+                    <mat-icon>visibility</mat-icon>
+                  </button>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>
+
+            <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" showFirstLastButtons></mat-paginator>
+          </div>
+
+          <!-- Mensaje cuando no hay datos -->
+          <div *ngIf="dataSource.data.length === 0 && !isLoadingResults" class="no-data-message">
+            <p>No se encontraron jugadores con los filtros aplicados</p>
+          </div>
+
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </div>
+</div>
+
+<!-- Spinner de carga -->
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="medium" color="#fff" type="ball-clip-rotate" [fullScreen]="true">
+  <p style="color: white">Cargando...</p>
+</ngx-spinner>

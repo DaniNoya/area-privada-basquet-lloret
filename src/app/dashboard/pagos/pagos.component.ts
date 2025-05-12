@@ -96,6 +96,11 @@ export class PagosComponent implements OnInit, AfterViewInit {
   ngOnInit() {
     // Mostrem l'spinner de carga
     this.isLoadingResults = true;
+    // Initialize data sources with empty arrays to prevent undefined errors
+    this.dataSource.data = [];
+    this.dataSourceNoCompletados.data = [];
+    this.dataSourceFallidos.data = [];
+    
     this.pagosService.getPagos(this.metodoVisualizacion, this.tipoMovimiento).subscribe(res => {
       this.dataSource.data = res['pagos'];
       this.dataSourceNoCompletados.data = res['pagosNoCompletados'];

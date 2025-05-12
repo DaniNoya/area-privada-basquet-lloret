@@ -18,6 +18,7 @@ import {DescuentosComponent} from './dashboard/descuentos/descuentos.component';
 import {PagosComponent} from './dashboard/pagos/pagos.component';
 import {PagosUsuarioComponent} from './dashboard/pagos-usuario/pagos-usuario.component';
 import { PartidosComponent } from './dashboard/partidos/partidos.component';
+import { CampusJugadorComponent } from './dashboard/campus-jugador/campus-jugador.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [AuthGuard] },
@@ -79,6 +80,10 @@ export const routes: Routes = [
       {
         path: 'pagos-usuario',
         component: PagosUsuarioComponent
+      },
+      {
+        path: 'campus-jugador',
+        component: CampusJugadorComponent
       }
     ],
     canActivate: [AuthGuard] },

@@ -8,6 +8,7 @@ import {Categoria} from '../classes/categoria';
 import {Competicion} from '../classes/competicion';
 import {TipoCategoria} from '../classes/tipo_categoria';
 import {TipoPago} from '../classes/tipo_pago';
+import { MatSnackBar } from '@angular/material';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +16,10 @@ import {TipoPago} from '../classes/tipo_pago';
 export class GlobalService {
   private API_URL = environment.API_URL;
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private snackBar: MatSnackBar
+  ) { }
 
   getSexos(): Observable<Sexo[]> {
     const params = new HttpParams().set('tipo', 'sexo');
@@ -69,5 +73,16 @@ export class GlobalService {
     return this.http.post(this.API_URL + '/checkValid.php', {password: passw}).pipe(
       map((res) => res['valido'])
     );
+  }
+
+  /**
+   * Muestra un mensaje en un snackbar
+   * @param mensaje El mensaje a mostrar
+   * @param duracion Duración en milisegundos (por defecto 3000ms)
+   */
+  mostrarMensaje(mensaje: string, duracion: number = 3000) {
+    this.snackBar.open(mensaje, 'Cerrar', {
+      duration: duracion,
+    });
   }
 }
