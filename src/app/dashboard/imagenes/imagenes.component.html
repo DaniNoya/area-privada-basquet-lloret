@@ -1,0 +1,77 @@
+<div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Imagenes</h1>
+</div>
+<mat-tab-group (selectedTabChange)="fotosClub = false; equipoSeleccionado = undefined; imagenesDescargadas = []; seleccion = ''">
+  <mat-tab label="Subir imagenes">
+    <h2 class="mt-3"><small>Seleccione categoría y suba imagenes</small></h2>
+
+    <div class="row">
+      <div class="col-3 mt-3">
+        <mat-checkbox [(ngModel)]="fotosClub">Fotos de club</mat-checkbox>
+        <br/>
+        <mat-form-field>
+          <mat-label><b>Categoría:</b></mat-label>
+          <mat-select [disabled]="fotosClub" [(value)]="equipoSeleccionado">
+            <mat-option *ngFor="let equipo of equipos" [value]="equipo">
+              {{equipo.categoria}} {{equipo.tipoCategoria}} {{equipo.descripcion}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <input [hidden]="true" class="mt-3" type="file" accept="image/jpg" #file imageUpload (imageSelected)="selected($event)" [resizeOptions]="resizeOptions" multiple/>
+        <br/>
+        <button type="button" class="btn btn-primary mt-3" (click)="file.click()">Subir imagen(es)</button>
+        <br/>
+        <button type="button" class="btn btn-success mt-5" (click)="guardarImatges()" [disabled]="imagenes.length == 0 || (!equipoSeleccionado && !fotosClub)">Guardar y subir</button>
+      </div>
+      <div class="col-9">
+        <h5 *ngIf="fotosClub"><b>Fotos de club</b></h5>
+        <h5 *ngIf="equipoSeleccionado!= undefined && !fotosClub"><b>{{ equipoSeleccionado.categoria }} {{ equipoSeleccionado.tipoCategoria }} {{ equipoSeleccionado.descripcion }}</b></h5>
+        <div class="row">
+          <div class="col-4" *ngFor="let imagen of imagenes">
+            <button class="close" (click)="deleteImagen(imagen)"><i class="fas fa-times-circle"></i></button>
+            <img src="{{ imagen }}" width="100%"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Eliminar imagenes">
+    <h2 class="mt-3"><small>Seleccione categoría para ver imagenes</small></h2>
+    <div class="row">
+      <div class="col-3 mt-3">
+        <mat-checkbox [(ngModel)]="fotosClub" (change)="imagenesDescargadas = []; equipoSeleccionado = undefined; seleccion = ''">Fotos de club</mat-checkbox>
+        <br/>
+        <mat-form-field>
+          <mat-label><b>Categoría:</b></mat-label>
+          <mat-select [disabled]="fotosClub" [(value)]="equipoSeleccionado" (selectionChange)="imagenesDescargadas = []; fotosClub = false; seleccion = ''">
+            <mat-option *ngFor="let equipo of equipos" [value]="equipo">
+              {{equipo.categoria}} {{equipo.tipoCategoria}} {{equipo.descripcion}}
+            </mat-option>
+          </mat-select>
+        </mat-form-field>
+        <br/>
+        <button type="button" class="btn btn-primary mt-3" (click)="descargarImatges()" [disabled]="!equipoSeleccionado && !fotosClub">Descargar imagen(es)</button>
+        <br/>
+        <button type="button" class="btn btn-success mt-5" (click)="eliminarImatges()" [disabled]="seleccion === ''">Guardar</button>
+      </div>
+      <div class="col-9">
+        <h5><b>{{ seleccion }}</b></h5>
+        <div class="row">
+          <div class="col-4" *ngFor="let imagen of imagenesDescargadas">
+            <button class="close" (click)="deleteImagenDescargada(imagen)"><i class="fas fa-times-circle"></i></button>
+            <img src="{{ imagen }}" width="100%"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>
+<ngx-spinner
+  bdColor = "rgba(51,51,51,0.8)"
+  size = "medium"
+  color = "#fff"
+  type = "ball-climbing-dot"
+  [fullScreen] = "true"
+>
+  <p style="color: white" > Espere por favor... </p>
+</ngx-spinner>

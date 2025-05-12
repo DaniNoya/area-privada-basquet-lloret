@@ -83,10 +83,9 @@ class ResultImportesDescuentos {
 }
 function returnConection() {
   if (TEST_APP)
-    //$con=mysqli_connect("81.46.246.126","basquetlloret","W1f1Nu7s2017","basquetlloretdb_test","33077");
-    $con=mysqli_connect("localhost","root","","test_basquetlloret","3306");
-  else  //si estamos en produccion TEST_APP vale false
-    $con=mysqli_connect("localhost","root","","test_basquetlloret","3306");
+    $con=mysqli_connect("localhost","root","","cblloretdb_test","3306");
+  else
+    $con=mysqli_connect("localhost","root","","cblloretdb_test","3306");
   return $con;
 }
 ?>

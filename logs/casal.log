@@ -1,0 +1,190 @@
+[2025-05-09 15:08:48][INFO] Procesando cálculo para casal
+[2025-05-09 15:08:48][INFO] Datos recibidos: {"dniTutor":"35491564B","jugadorMas18":"0","registrationPlayers":[{"weeksList":["Semana 1","Semana 2","Semana 3","Semana 6","Semana 7","Semana 8","Semana 9"],"nomJugador":"Hijo","primerCognomJugador":"Dani","segonCognomJugador":"Noya","dniJugador":"35491564B - Hijo"}]}
+[2025-05-09 15:08:48][INFO] Jugador: Hijo Dani con 7 semanas seleccionadas: ["Semana 1","Semana 2","Semana 3","Semana 6","Semana 7","Semana 8","Semana 9"]
+[2025-05-09 15:08:48][INFO] Datos completos del jugador: {"weeksList":["Semana 1","Semana 2","Semana 3","Semana 6","Semana 7","Semana 8","Semana 9"],"nomJugador":"Hijo","primerCognomJugador":"Dani","segonCognomJugador":"Noya","dniJugador":"35491564B - Hijo"}
+[2025-05-09 15:08:48][INFO] Respuesta final: {"sql":null,"jugador":{"fullname":"Hijo Dani","dni":"35491564B - Hijo","pagoUnico":{"importeUnitario":340,"concepto":"7 semanas","importeUnitarioFinalOnline":340,"importeUnitarioFinalPresencial":340,"restante":0},"weeksList":["Semana 1","Semana 2","Semana 3","Semana 6","Semana 7","Semana 8","Semana 9"]},"players":[{"fullname":"Hijo Dani","dni":"35491564B - Hijo","pagoUnico":{"importeUnitario":340,"concepto":"7 semanas","importeUnitarioFinalOnline":340,"importeUnitarioFinalPresencial":340,"restante":0},"weeksList":["Semana 1","Semana 2","Semana 3","Semana 6","Semana 7","Semana 8","Semana 9"]}],"amountOnline":340,"amountPresencial":340,"amountOnlineInscription":null,"amountDiscountAreBrothers":0,"amountSinglePaymentDiscount":0,"amountDiscountIsMember":0,"sonHermanos":false,"temporadaPasada":null,"isSocioClub":false,"concepto":null,"importe":null,"importeInscripcion":null,"precioDescunetEsSocio":null,"porcentajeDescuentoPrimerE":null,"porcentajeDescuentoTabDescuentos":null,"anioPasadoDescuento":null,"isBrothers":false,"isPlayerClub":false}
+[2025-05-09 15:08:54][INFO] Iniciando proceso de inserción de datos del Casal d'Estiu
+[2025-05-09 15:08:54][DEBUG] Datos POST recibidos: {
+    "id": "1569"
+}
+[2025-05-09 15:08:54][INFO] ID de datos_intermedios: 1569
+[2025-05-09 15:08:54][INFO] Intentando ejecutar consulta a datos_intermedios
+[2025-05-09 15:08:54][INFO] N filas obtenidas: 1
+[2025-05-09 15:08:54][DEBUG] Datos Obtenidos: {
+    "id": 1569,
+    "data": "{\"form_fields[nomTutor]\":\"Daniel\",\"form_fields[primerCognomTutor]\":\"Noya\",\"form_fields[segonCognomTutor]\":\"Catoira\",\"form_fields[dniTutor]\":\"35491564B\",\"form_fields[domiciliTutor]\":\"Rajolers 7A\",\"form_fields[poblacioTutor]\":\"Girona\",\"form_fields[codiPostalTutor]\":\"17003\",\"form_fields[emailTutor]\":\"lideirasgz@gmail.com\",\"form_fields[telefonTutor]\":\"628154217\",\"form_fields[parentescTutor]\":\"1\",\"form_mas18\":false,\"Jugadores\":[{\"form_fields[nomJugador]\":\"Hijo\",\"form_fields[primerCognomJugador]\":\"Dani\",\"form_fields[segonCognomJugador]\":\"Noya\",\"form_fields[dataNaixementJugador]\":\"2014-04-08\",\"form_fields[dniJugador]\":\"35491564B - Hijo\",\"form_fields[domiciliJugador]\":\"Domiciliio hijo 1\",\"form_fields[tarjetaSanitariaJugador]\":\"123123123123\",\"form_fields[poblacioJugador]\":\"girona\",\"form_fields[codiPostalJugador]\":\"17003\",\"form_fields[emailJugador]\":\"informatica@recreativoslloret.com\",\"form_fields[telefonJugador]\":\"123123123\",\"form_fields[escolaJugador]\":\"\\u00c3\\u20acngels Alemany\",\"form_fields[cursJugador]\":\"3\",\"form_fields[categoriaSexoJugador]\":\"1\",\"form_fields[tallaCamisetaRegaloCHJugador]\":\"4\",\"form_fields[observacionsJugador]\":\"\"}],\"campoCodePlayer\":\"150\"}",
+    "fecha_inscripcion": "2025-05-09 15:08:54",
+    "pagoOK": null,
+    "pago_Importe": "340.00",
+    "presupuesto": "{\"lineas\":[{\"nombre\":\"Hijo Dani\",\"importe\":\"340.00\",\"restante\":\"340.00\",\"turnos\":[\"Semana 1\",\"Semana 2\",\"Semana 3\",\"Semana 6\",\"Semana 7\",\"Semana 8\",\"Semana 9\"]}],\"descuentoHermanos\":{\"porcentaje\":5,\"importe\":\"0.00\"},\"tipoPago\":{\"tipo\":\"Unico\",\"descuentoUnicoPago\":{\"porcentaje\":5,\"importe\":0}},\"total\":\"340.00\"}",
+    "pagina": "Inscripcion: Casal dEstiu 2025",
+    "idTipo_pago": 28
+}
+[2025-05-09 15:08:54][DEBUG] Procesando semana número: 1
+[2025-05-09 15:08:54][DEBUG] ID de semana encontrado: 1
+[2025-05-09 15:08:54][INFO] Semana 1 asignada al jugador Hijo
+[2025-05-09 15:08:54][DEBUG] Procesando semana número: 2
+[2025-05-09 15:08:54][DEBUG] ID de semana encontrado: 2
+[2025-05-09 15:08:54][INFO] Semana 2 asignada al jugador Hijo
+[2025-05-09 15:08:54][DEBUG] Procesando semana número: 3
+[2025-05-09 15:08:54][DEBUG] ID de semana encontrado: 3
+[2025-05-09 15:08:54][INFO] Semana 3 asignada al jugador Hijo
+[2025-05-09 15:08:54][DEBUG] Procesando semana número: 6
+[2025-05-09 15:08:54][DEBUG] ID de semana encontrado: 6
+[2025-05-09 15:08:54][INFO] Semana 6 asignada al jugador Hijo
+[2025-05-09 15:08:54][DEBUG] Procesando semana número: 7
+[2025-05-09 15:08:54][DEBUG] ID de semana encontrado: 7
+[2025-05-09 15:08:54][INFO] Semana 7 asignada al jugador Hijo
+[2025-05-09 15:08:54][DEBUG] Procesando semana número: 8
+[2025-05-09 15:08:54][DEBUG] ID de semana encontrado: 8
+[2025-05-09 15:08:54][INFO] Semana 8 asignada al jugador Hijo
+[2025-05-09 15:08:54][DEBUG] Procesando semana número: 9
+[2025-05-09 15:08:54][DEBUG] ID de semana encontrado: 9
+[2025-05-09 15:08:54][INFO] Semana 9 asignada al jugador Hijo
+[2025-05-09 15:08:54][INFO] Proceso de inserción completado exitosamente
+[2025-05-09 17:01:33][INFO] Procesando cálculo para casal
+[2025-05-09 17:01:33][INFO] Datos recibidos: {"dniTutor":"35491564B","jugadorMas18":"0","registrationPlayers":[{"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 4"," Semana 5"],"nomJugador":"Hijo","primerCognomJugador":"Dani","segonCognomJugador":"Noya","dniJugador":"35491564B - Hijo"}]}
+[2025-05-09 17:01:33][INFO] Jugador: Hijo Dani con 5 semanas seleccionadas: [" Semana 1"," Semana 2"," Semana 3"," Semana 4"," Semana 5"]
+[2025-05-09 17:01:33][INFO] Datos completos del jugador: {"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 4"," Semana 5"],"nomJugador":"Hijo","primerCognomJugador":"Dani","segonCognomJugador":"Noya","dniJugador":"35491564B - Hijo"}
+[2025-05-09 17:01:33][INFO] Respuesta final: {"sql":null,"jugador":{"fullname":"Hijo Dani","dni":"35491564B - Hijo","pagoUnico":{"importeUnitario":260,"concepto":"5 semanas","importeUnitarioFinalOnline":260,"importeUnitarioFinalPresencial":260,"restante":0},"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 4"," Semana 5"]},"players":[{"fullname":"Hijo Dani","dni":"35491564B - Hijo","pagoUnico":{"importeUnitario":260,"concepto":"5 semanas","importeUnitarioFinalOnline":260,"importeUnitarioFinalPresencial":260,"restante":0},"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 4"," Semana 5"]}],"amountOnline":260,"amountPresencial":260,"amountOnlineInscription":null,"amountDiscountAreBrothers":0,"amountSinglePaymentDiscount":0,"amountDiscountIsMember":0,"sonHermanos":false,"temporadaPasada":null,"isSocioClub":false,"concepto":null,"importe":null,"importeInscripcion":null,"precioDescunetEsSocio":null,"porcentajeDescuentoPrimerE":null,"porcentajeDescuentoTabDescuentos":null,"anioPasadoDescuento":null,"isBrothers":false,"isPlayerClub":false}
+[2025-05-12 09:51:35][INFO] Procesando cálculo para casal
+[2025-05-12 09:51:35][INFO] Datos recibidos: {"dniTutor":"35491564B","jugadorMas18":"0","registrationPlayers":[{"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 5"," Semana 6"," Semana 7"],"nomJugador":"Hijo","primerCognomJugador":"Dani","segonCognomJugador":"Noya","dniJugador":"35491564B - Hijo"}]}
+[2025-05-12 09:51:35][INFO] Jugador: Hijo Dani con 6 semanas seleccionadas: [" Semana 1"," Semana 2"," Semana 3"," Semana 5"," Semana 6"," Semana 7"]
+[2025-05-12 09:51:35][INFO] Datos completos del jugador: {"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 5"," Semana 6"," Semana 7"],"nomJugador":"Hijo","primerCognomJugador":"Dani","segonCognomJugador":"Noya","dniJugador":"35491564B - Hijo"}
+[2025-05-12 09:51:35][INFO] Respuesta final: {"sql":null,"jugador":{"fullname":"Hijo Dani","dni":"35491564B - Hijo","pagoUnico":{"importeUnitario":300,"concepto":"6 semanas","importeUnitarioFinalOnline":300,"importeUnitarioFinalPresencial":300,"restante":0},"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 5"," Semana 6"," Semana 7"]},"players":[{"fullname":"Hijo Dani","dni":"35491564B - Hijo","pagoUnico":{"importeUnitario":300,"concepto":"6 semanas","importeUnitarioFinalOnline":300,"importeUnitarioFinalPresencial":300,"restante":0},"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 5"," Semana 6"," Semana 7"]}],"amountOnline":300,"amountPresencial":300,"amountOnlineInscription":null,"amountDiscountAreBrothers":0,"amountSinglePaymentDiscount":0,"amountDiscountIsMember":0,"sonHermanos":false,"temporadaPasada":null,"isSocioClub":false,"concepto":null,"importe":null,"importeInscripcion":null,"precioDescunetEsSocio":null,"porcentajeDescuentoPrimerE":null,"porcentajeDescuentoTabDescuentos":null,"anioPasadoDescuento":null,"isBrothers":false,"isPlayerClub":false}
+[2025-05-12 09:53:09][INFO] Procesando cálculo para casal
+[2025-05-12 09:53:09][INFO] Datos recibidos: {"dniTutor":"35491564B","jugadorMas18":"0","registrationPlayers":[{"weeksList":[" Semana 1"," Semana 3"," Semana 5"," Semana 7"," Semana 9"],"nomJugador":"Hijo","primerCognomJugador":"Dani","segonCognomJugador":"Noya","dniJugador":"35491564B - Hijo"}]}
+[2025-05-12 09:53:09][INFO] Jugador: Hijo Dani con 5 semanas seleccionadas: [" Semana 1"," Semana 3"," Semana 5"," Semana 7"," Semana 9"]
+[2025-05-12 09:53:09][INFO] Datos completos del jugador: {"weeksList":[" Semana 1"," Semana 3"," Semana 5"," Semana 7"," Semana 9"],"nomJugador":"Hijo","primerCognomJugador":"Dani","segonCognomJugador":"Noya","dniJugador":"35491564B - Hijo"}
+[2025-05-12 09:53:09][INFO] Respuesta final: {"sql":null,"jugador":{"fullname":"Hijo Dani","dni":"35491564B - Hijo","pagoUnico":{"importeUnitario":260,"concepto":"5 semanas","importeUnitarioFinalOnline":260,"importeUnitarioFinalPresencial":260,"restante":0},"weeksList":[" Semana 1"," Semana 3"," Semana 5"," Semana 7"," Semana 9"]},"players":[{"fullname":"Hijo Dani","dni":"35491564B - Hijo","pagoUnico":{"importeUnitario":260,"concepto":"5 semanas","importeUnitarioFinalOnline":260,"importeUnitarioFinalPresencial":260,"restante":0},"weeksList":[" Semana 1"," Semana 3"," Semana 5"," Semana 7"," Semana 9"]}],"amountOnline":260,"amountPresencial":260,"amountOnlineInscription":null,"amountDiscountAreBrothers":0,"amountSinglePaymentDiscount":0,"amountDiscountIsMember":0,"sonHermanos":false,"temporadaPasada":null,"isSocioClub":false,"concepto":null,"importe":null,"importeInscripcion":null,"precioDescunetEsSocio":null,"porcentajeDescuentoPrimerE":null,"porcentajeDescuentoTabDescuentos":null,"anioPasadoDescuento":null,"isBrothers":false,"isPlayerClub":false}
+[2025-05-12 09:55:46][INFO] Procesando cálculo para casal
+[2025-05-12 09:55:46][INFO] Datos recibidos: {"dniTutor":"35491564B","jugadorMas18":"0","registrationPlayers":[{"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 5"," Semana 7"," Semana 9"],"nomJugador":"Hijo","primerCognomJugador":"Dani","segonCognomJugador":"Noya","dniJugador":"35491564B - Hijo"}]}
+[2025-05-12 09:55:46][INFO] Jugador: Hijo Dani con 6 semanas seleccionadas: [" Semana 1"," Semana 2"," Semana 3"," Semana 5"," Semana 7"," Semana 9"]
+[2025-05-12 09:55:46][INFO] Datos completos del jugador: {"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 5"," Semana 7"," Semana 9"],"nomJugador":"Hijo","primerCognomJugador":"Dani","segonCognomJugador":"Noya","dniJugador":"35491564B - Hijo"}
+[2025-05-12 09:55:46][INFO] Respuesta final: {"sql":null,"jugador":{"fullname":"Hijo Dani","dni":"35491564B - Hijo","pagoUnico":{"importeUnitario":300,"concepto":"6 semanas","importeUnitarioFinalOnline":300,"importeUnitarioFinalPresencial":300,"restante":0},"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 5"," Semana 7"," Semana 9"]},"players":[{"fullname":"Hijo Dani","dni":"35491564B - Hijo","pagoUnico":{"importeUnitario":300,"concepto":"6 semanas","importeUnitarioFinalOnline":300,"importeUnitarioFinalPresencial":300,"restante":0},"weeksList":[" Semana 1"," Semana 2"," Semana 3"," Semana 5"," Semana 7"," Semana 9"]}],"amountOnline":300,"amountPresencial":300,"amountOnlineInscription":null,"amountDiscountAreBrothers":0,"amountSinglePaymentDiscount":0,"amountDiscountIsMember":0,"sonHermanos":false,"temporadaPasada":null,"isSocioClub":false,"concepto":null,"importe":null,"importeInscripcion":null,"precioDescunetEsSocio":null,"porcentajeDescuentoPrimerE":null,"porcentajeDescuentoTabDescuentos":null,"anioPasadoDescuento":null,"isBrothers":false,"isPlayerClub":false}
+[2025-05-12 11:08:32][INFO] Procesando cálculo para casal
+[2025-05-12 11:08:32][INFO] Datos recibidos: {"dniTutor":"12402923N","jugadorMas18":"0","registrationPlayers":[{"weeksList":[" Semana 2"," Semana 4"," Semana 6"," Semana 8"],"nomJugador":"Marco","primerCognomJugador":"Dubois","segonCognomJugador":"Robles","dniJugador":"41675508Z"}]}
+[2025-05-12 11:08:32][INFO] Jugador: Marco Dubois con 4 semanas seleccionadas: [" Semana 2"," Semana 4"," Semana 6"," Semana 8"]
+[2025-05-12 11:08:32][INFO] Datos completos del jugador: {"weeksList":[" Semana 2"," Semana 4"," Semana 6"," Semana 8"],"nomJugador":"Marco","primerCognomJugador":"Dubois","segonCognomJugador":"Robles","dniJugador":"41675508Z"}
+[2025-05-12 11:08:32][INFO] Aplicando descuento de socio para DNI: 12402923N
+[2025-05-12 11:08:32][INFO] Respuesta final: {"sql":null,"jugador":{"fullname":"Marco Dubois","dni":"41675508Z","pagoUnico":{"importeUnitario":220,"concepto":"4 semanas","importeUnitarioFinalOnline":176,"importeUnitarioFinalPresencial":176,"restante":0},"weeksList":[" Semana 2"," Semana 4"," Semana 6"," Semana 8"]},"players":[{"fullname":"Marco Dubois","dni":"41675508Z","pagoUnico":{"importeUnitario":220,"concepto":"4 semanas","importeUnitarioFinalOnline":176,"importeUnitarioFinalPresencial":176,"restante":0},"weeksList":[" Semana 2"," Semana 4"," Semana 6"," Semana 8"]}],"amountOnline":176,"amountPresencial":176,"amountOnlineInscription":null,"amountDiscountAreBrothers":0,"amountSinglePaymentDiscount":0,"amountDiscountIsMember":44,"sonHermanos":false,"temporadaPasada":null,"isSocioClub":true,"concepto":null,"importe":null,"importeInscripcion":null,"precioDescunetEsSocio":null,"porcentajeDescuentoPrimerE":null,"porcentajeDescuentoTabDescuentos":null,"anioPasadoDescuento":null,"isBrothers":false,"isPlayerClub":false}
+[2025-05-12 11:08:37][INFO] Iniciando proceso de inserción de datos del Casal d'Estiu
+[2025-05-12 11:08:37][DEBUG] Datos POST recibidos: {
+    "id": "1573"
+}
+[2025-05-12 11:08:37][INFO] ID de datos_intermedios: 1573
+[2025-05-12 11:08:37][INFO] Intentando ejecutar consulta a datos_intermedios
+[2025-05-12 11:08:37][INFO] N filas obtenidas: 1
+[2025-05-12 11:08:37][DEBUG] Datos Obtenidos: {
+    "id": 1573,
+    "data": "{\"form_fields[nomTutor]\":\"ana \",\"form_fields[primerCognomTutor]\":\"robles\",\"form_fields[segonCognomTutor]\":\"Llanes\",\"form_fields[dniTutor]\":\"12402923N\",\"form_fields[domiciliTutor]\":\"Avda Aries\",\"form_fields[poblacioTutor]\":\"Tossa de mar\",\"form_fields[codiPostalTutor]\":\"17320\",\"form_fields[emailTutor]\":\"anaroblesllanes@gmail.com\",\"form_fields[telefonTutor]\":\"608334930\",\"form_fields[parentescTutor]\":\"1\",\"form_mas18\":false,\"Jugadores\":[{\"form_fields[nomJugador]\":\"Marco\",\"form_fields[primerCognomJugador]\":\"Dubois\",\"form_fields[segonCognomJugador]\":\"Robles\",\"form_fields[dataNaixementJugador]\":\"2012-01-21\",\"form_fields[dniJugador]\":\"41675508Z\",\"form_fields[domiciliJugador]\":\"Aries 23\",\"form_fields[tarjetaSanitariaJugador]\":\"DURO0120121007\",\"form_fields[poblacioJugador]\":\"Tossa de Mar\",\"form_fields[codiPostalJugador]\":\"17320\",\"form_fields[emailJugador]\":\"anaroblesllanes@gmail.com\",\"form_fields[telefonJugador]\":\"608334930\",\"form_fields[escolaJugador]\":\"\\u00c3\\u20acngels Alemany\",\"form_fields[cursJugador]\":\"6\",\"form_fields[categoriaSexoJugador]\":\"1\",\"form_fields[tallaCamisetaRegaloCHJugador]\":\"4\",\"form_fields[observacionsJugador]\":\"\"}],\"campoCodePlayer\":\"150\"}",
+    "fecha_inscripcion": "2025-05-12 11:08:37",
+    "pagoOK": null,
+    "pago_Importe": "176.00",
+    "presupuesto": "{\"lineas\":[{\"nombre\":\"Marco Dubois\",\"importe\":\"176.00\",\"restante\":\"176.00\",\"turnos\":[\" Semana 2\",\" Semana 4\",\" Semana 6\",\" Semana 8\"]}],\"descuentoHermanos\":{\"porcentaje\":5,\"importe\":\"0.00\"},\"tipoPago\":{\"tipo\":\"Unico\",\"descuentoUnicoPago\":{\"porcentaje\":5,\"importe\":0}},\"total\":\"176.00\"}",
+    "pagina": "Inscripcion: Casal dEstiu 2025",
+    "idTipo_pago": 28
+}
+[2025-05-12 11:08:37][DEBUG] Procesando semana número: 2
+[2025-05-12 11:08:37][DEBUG] ID de semana encontrado: 2
+[2025-05-12 11:08:37][INFO] Semana 2 asignada al jugador Marco
+[2025-05-12 11:08:37][DEBUG] Procesando semana número: 4
+[2025-05-12 11:08:37][DEBUG] ID de semana encontrado: 4
+[2025-05-12 11:08:37][INFO] Semana 4 asignada al jugador Marco
+[2025-05-12 11:08:37][DEBUG] Procesando semana número: 6
+[2025-05-12 11:08:37][DEBUG] ID de semana encontrado: 6
+[2025-05-12 11:08:37][INFO] Semana 6 asignada al jugador Marco
+[2025-05-12 11:08:37][DEBUG] Procesando semana número: 8
+[2025-05-12 11:08:37][DEBUG] ID de semana encontrado: 8
+[2025-05-12 11:08:37][INFO] Semana 8 asignada al jugador Marco
+[2025-05-12 11:08:37][INFO] Proceso de inserción completado exitosamente
+[2025-05-12 11:37:50][INFO] Procesando cálculo para casal
+[2025-05-12 11:37:50][INFO] Datos recibidos: {"dniTutor":"12402923N","jugadorMas18":"0","registrationPlayers":[{"weeksList":[" Semana 1"," Semana 4"," Semana 6"," Semana 8"],"nomJugador":"Marco","primerCognomJugador":"Dubois","segonCognomJugador":"Robles","dniJugador":"41675508Z"}]}
+[2025-05-12 11:37:50][INFO] Jugador: Marco Dubois con 4 semanas seleccionadas: [" Semana 1"," Semana 4"," Semana 6"," Semana 8"]
+[2025-05-12 11:37:50][INFO] Datos completos del jugador: {"weeksList":[" Semana 1"," Semana 4"," Semana 6"," Semana 8"],"nomJugador":"Marco","primerCognomJugador":"Dubois","segonCognomJugador":"Robles","dniJugador":"41675508Z"}
+[2025-05-12 11:37:50][INFO] Aplicando descuento de socio para DNI: 12402923N
+[2025-05-12 11:37:50][INFO] Respuesta final: {"sql":null,"jugador":{"fullname":"Marco Dubois","dni":"41675508Z","pagoUnico":{"importeUnitario":220,"concepto":"4 semanas","importeUnitarioFinalOnline":176,"importeUnitarioFinalPresencial":176,"restante":0},"weeksList":[" Semana 1"," Semana 4"," Semana 6"," Semana 8"]},"players":[{"fullname":"Marco Dubois","dni":"41675508Z","pagoUnico":{"importeUnitario":220,"concepto":"4 semanas","importeUnitarioFinalOnline":176,"importeUnitarioFinalPresencial":176,"restante":0},"weeksList":[" Semana 1"," Semana 4"," Semana 6"," Semana 8"]}],"amountOnline":176,"amountPresencial":176,"amountOnlineInscription":null,"amountDiscountAreBrothers":0,"amountSinglePaymentDiscount":0,"amountDiscountIsMember":44,"sonHermanos":false,"temporadaPasada":null,"isSocioClub":true,"concepto":null,"importe":null,"importeInscripcion":null,"precioDescunetEsSocio":null,"porcentajeDescuentoPrimerE":null,"porcentajeDescuentoTabDescuentos":null,"anioPasadoDescuento":null,"isBrothers":false,"isPlayerClub":false}
+[2025-05-12 11:50:49][INFO] Procesando cálculo para casal
+[2025-05-12 11:50:49][INFO] Datos recibidos: {"dniTutor":"12402923N","jugadorMas18":"0","registrationPlayers":[{"weeksList":[" Semana 1"," Semana 3"," Semana 4"," Semana 5"," Semana 6"," Semana 7"," Semana 8"],"nomJugador":"Marco","primerCognomJugador":"Dubois","segonCognomJugador":"Robles","dniJugador":"41675508Z"}]}
+[2025-05-12 11:50:49][INFO] Jugador: Marco Dubois con 7 semanas seleccionadas: [" Semana 1"," Semana 3"," Semana 4"," Semana 5"," Semana 6"," Semana 7"," Semana 8"]
+[2025-05-12 11:50:49][INFO] Datos completos del jugador: {"weeksList":[" Semana 1"," Semana 3"," Semana 4"," Semana 5"," Semana 6"," Semana 7"," Semana 8"],"nomJugador":"Marco","primerCognomJugador":"Dubois","segonCognomJugador":"Robles","dniJugador":"41675508Z"}
+[2025-05-12 11:50:49][INFO] Aplicando descuento de socio para DNI: 12402923N
+[2025-05-12 11:50:49][INFO] Respuesta final: {"sql":null,"jugador":{"fullname":"Marco Dubois","dni":"41675508Z","pagoUnico":{"importeUnitario":340,"concepto":"7 semanas","importeUnitarioFinalOnline":272,"importeUnitarioFinalPresencial":272,"restante":0},"weeksList":[" Semana 1"," Semana 3"," Semana 4"," Semana 5"," Semana 6"," Semana 7"," Semana 8"]},"players":[{"fullname":"Marco Dubois","dni":"41675508Z","pagoUnico":{"importeUnitario":340,"concepto":"7 semanas","importeUnitarioFinalOnline":272,"importeUnitarioFinalPresencial":272,"restante":0},"weeksList":[" Semana 1"," Semana 3"," Semana 4"," Semana 5"," Semana 6"," Semana 7"," Semana 8"]}],"amountOnline":272,"amountPresencial":272,"amountOnlineInscription":null,"amountDiscountAreBrothers":0,"amountSinglePaymentDiscount":0,"amountDiscountIsMember":68,"sonHermanos":false,"temporadaPasada":null,"isSocioClub":true,"concepto":null,"importe":null,"importeInscripcion":null,"precioDescunetEsSocio":null,"porcentajeDescuentoPrimerE":null,"porcentajeDescuentoTabDescuentos":null,"anioPasadoDescuento":null,"isBrothers":false,"isPlayerClub":false}
+[2025-05-12 11:50:56][INFO] Iniciando proceso de inserción de datos del Casal d'Estiu
+[2025-05-12 11:50:56][DEBUG] Datos POST recibidos: {
+    "id": "1574"
+}
+[2025-05-12 11:50:56][INFO] ID de datos_intermedios: 1574
+[2025-05-12 11:50:56][INFO] Intentando ejecutar consulta a datos_intermedios
+[2025-05-12 11:50:56][INFO] N filas obtenidas: 1
+[2025-05-12 11:50:56][DEBUG] Datos Obtenidos: {
+    "id": 1574,
+    "data": "{\"form_fields[nomTutor]\":\"ana \",\"form_fields[primerCognomTutor]\":\"robles\",\"form_fields[segonCognomTutor]\":\"Llanes\",\"form_fields[dniTutor]\":\"12402923N\",\"form_fields[domiciliTutor]\":\"Avda Aries\",\"form_fields[poblacioTutor]\":\"Tossa de mar\",\"form_fields[codiPostalTutor]\":\"17320\",\"form_fields[emailTutor]\":\"anaroblesllanes@gmail.com\",\"form_fields[telefonTutor]\":\"608334930\",\"form_fields[parentescTutor]\":\"1\",\"form_mas18\":false,\"Jugadores\":[{\"form_fields[nomJugador]\":\"Marco\",\"form_fields[primerCognomJugador]\":\"Dubois\",\"form_fields[segonCognomJugador]\":\"Robles\",\"form_fields[dataNaixementJugador]\":\"2012-01-21\",\"form_fields[dniJugador]\":\"41675508Z\",\"form_fields[domiciliJugador]\":\"Aries 23\",\"form_fields[tarjetaSanitariaJugador]\":\"DURO0120121007\",\"form_fields[poblacioJugador]\":\"Tossa de Mar\",\"form_fields[codiPostalJugador]\":\"17320\",\"form_fields[emailJugador]\":\"anaroblesllanes@gmail.com\",\"form_fields[telefonJugador]\":\"608334930\",\"form_fields[escolaJugador]\":\"\\u00c3\\u20acngels Alemany\",\"form_fields[cursJugador]\":\"6\",\"form_fields[categoriaSexoJugador]\":\"1\",\"form_fields[tallaCamisetaRegaloCHJugador]\":\"4\",\"form_fields[observacionsJugador]\":\"\"}],\"campoCodePlayer\":\"150\"}",
+    "fecha_inscripcion": "2025-05-12 11:50:56",
+    "pagoOK": null,
+    "pago_Importe": "272.00",
+    "presupuesto": "{\"lineas\":[{\"nombre\":\"Marco Dubois\",\"importe\":\"272.00\",\"restante\":\"272.00\",\"turnos\":[\" Semana 1\",\" Semana 3\",\" Semana 4\",\" Semana 5\",\" Semana 6\",\" Semana 7\",\" Semana 8\"]}],\"descuentoHermanos\":{\"porcentaje\":5,\"importe\":\"0.00\"},\"tipoPago\":{\"tipo\":\"Unico\",\"descuentoUnicoPago\":{\"porcentaje\":5,\"importe\":0}},\"total\":\"272.00\"}",
+    "pagina": "Inscripcion: Casal dEstiu 2025",
+    "idTipo_pago": 28
+}
+[2025-05-12 11:50:56][DEBUG] Procesando semana número: 1
+[2025-05-12 11:50:56][DEBUG] ID de semana encontrado: 1
+[2025-05-12 11:50:56][INFO] Semana 1 asignada al jugador Marco
+[2025-05-12 11:50:56][DEBUG] Procesando semana número: 3
+[2025-05-12 11:50:56][DEBUG] ID de semana encontrado: 3
+[2025-05-12 11:50:56][INFO] Semana 3 asignada al jugador Marco
+[2025-05-12 11:50:56][DEBUG] Procesando semana número: 4
+[2025-05-12 11:50:56][DEBUG] ID de semana encontrado: 4
+[2025-05-12 11:50:56][INFO] Semana 4 asignada al jugador Marco
+[2025-05-12 11:50:56][DEBUG] Procesando semana número: 5
+[2025-05-12 11:50:56][DEBUG] ID de semana encontrado: 5
+[2025-05-12 11:50:56][INFO] Semana 5 asignada al jugador Marco
+[2025-05-12 11:50:56][DEBUG] Procesando semana número: 6
+[2025-05-12 11:50:56][DEBUG] ID de semana encontrado: 6
+[2025-05-12 11:50:56][INFO] Semana 6 asignada al jugador Marco
+[2025-05-12 11:50:56][DEBUG] Procesando semana número: 7
+[2025-05-12 11:50:56][DEBUG] ID de semana encontrado: 7
+[2025-05-12 11:50:56][INFO] Semana 7 asignada al jugador Marco
+[2025-05-12 11:50:56][DEBUG] Procesando semana número: 8
+[2025-05-12 11:50:56][DEBUG] ID de semana encontrado: 8
+[2025-05-12 11:50:56][INFO] Semana 8 asignada al jugador Marco
+[2025-05-12 11:50:56][INFO] Proceso de inserción completado exitosamente
+[2025-05-12 11:52:56][INFO] Procesando cálculo para casal
+[2025-05-12 11:52:56][INFO] Datos recibidos: {"dniTutor":"12402923N","jugadorMas18":"0","registrationPlayers":[{"weeksList":[" Semana 1"," Semana 3"," Semana 4"," Semana 5"," Semana 6"],"nomJugador":"Marco","primerCognomJugador":"Dubois","segonCognomJugador":"Robles","dniJugador":"41675508Z"}]}
+[2025-05-12 11:52:56][INFO] Jugador: Marco Dubois con 5 semanas seleccionadas: [" Semana 1"," Semana 3"," Semana 4"," Semana 5"," Semana 6"]
+[2025-05-12 11:52:56][INFO] Datos completos del jugador: {"weeksList":[" Semana 1"," Semana 3"," Semana 4"," Semana 5"," Semana 6"],"nomJugador":"Marco","primerCognomJugador":"Dubois","segonCognomJugador":"Robles","dniJugador":"41675508Z"}
+[2025-05-12 11:52:56][INFO] Aplicando descuento de socio para DNI: 12402923N
+[2025-05-12 11:52:56][INFO] Respuesta final: {"sql":null,"jugador":{"fullname":"Marco Dubois","dni":"41675508Z","pagoUnico":{"importeUnitario":260,"concepto":"5 semanas","importeUnitarioFinalOnline":208,"importeUnitarioFinalPresencial":208,"restante":0},"weeksList":[" Semana 1"," Semana 3"," Semana 4"," Semana 5"," Semana 6"]},"players":[{"fullname":"Marco Dubois","dni":"41675508Z","pagoUnico":{"importeUnitario":260,"concepto":"5 semanas","importeUnitarioFinalOnline":208,"importeUnitarioFinalPresencial":208,"restante":0},"weeksList":[" Semana 1"," Semana 3"," Semana 4"," Semana 5"," Semana 6"]}],"amountOnline":208,"amountPresencial":208,"amountOnlineInscription":null,"amountDiscountAreBrothers":0,"amountSinglePaymentDiscount":0,"amountDiscountIsMember":52,"sonHermanos":false,"temporadaPasada":null,"isSocioClub":true,"concepto":null,"importe":null,"importeInscripcion":null,"precioDescunetEsSocio":null,"porcentajeDescuentoPrimerE":null,"porcentajeDescuentoTabDescuentos":null,"anioPasadoDescuento":null,"isBrothers":false,"isPlayerClub":false}
+[2025-05-12 11:53:00][INFO] Iniciando proceso de inserción de datos del Casal d'Estiu
+[2025-05-12 11:53:00][DEBUG] Datos POST recibidos: {
+    "id": "1575"
+}
+[2025-05-12 11:53:00][INFO] ID de datos_intermedios: 1575
+[2025-05-12 11:53:00][INFO] Intentando ejecutar consulta a datos_intermedios
+[2025-05-12 11:53:00][INFO] N filas obtenidas: 1
+[2025-05-12 11:53:00][DEBUG] Datos Obtenidos: {
+    "id": 1575,
+    "data": "{\"form_fields[nomTutor]\":\"ana \",\"form_fields[primerCognomTutor]\":\"robles\",\"form_fields[segonCognomTutor]\":\"Llanes\",\"form_fields[dniTutor]\":\"12402923N\",\"form_fields[domiciliTutor]\":\"Avda Aries\",\"form_fields[poblacioTutor]\":\"Tossa de mar\",\"form_fields[codiPostalTutor]\":\"17320\",\"form_fields[emailTutor]\":\"anaroblesllanes@gmail.com\",\"form_fields[telefonTutor]\":\"608334930\",\"form_fields[parentescTutor]\":\"1\",\"form_mas18\":false,\"Jugadores\":[{\"form_fields[nomJugador]\":\"Marco\",\"form_fields[primerCognomJugador]\":\"Dubois\",\"form_fields[segonCognomJugador]\":\"Robles\",\"form_fields[dataNaixementJugador]\":\"2012-01-21\",\"form_fields[dniJugador]\":\"41675508Z\",\"form_fields[domiciliJugador]\":\"Aries 23\",\"form_fields[tarjetaSanitariaJugador]\":\"DURO0120121007\",\"form_fields[poblacioJugador]\":\"Tossa de Mar\",\"form_fields[codiPostalJugador]\":\"17320\",\"form_fields[emailJugador]\":\"anaroblesllanes@gmail.com\",\"form_fields[telefonJugador]\":\"608334930\",\"form_fields[escolaJugador]\":\"\\u00c3\\u20acngels Alemany\",\"form_fields[cursJugador]\":\"6\",\"form_fields[categoriaSexoJugador]\":\"1\",\"form_fields[tallaCamisetaRegaloCHJugador]\":\"4\",\"form_fields[observacionsJugador]\":\"\"}],\"campoCodePlayer\":\"150\"}",
+    "fecha_inscripcion": "2025-05-12 11:53:00",
+    "pagoOK": null,
+    "pago_Importe": "208.00",
+    "presupuesto": "{\"lineas\":[{\"nombre\":\"Marco Dubois\",\"importe\":\"208.00\",\"restante\":\"208.00\",\"turnos\":[\" Semana 1\",\" Semana 3\",\" Semana 4\",\" Semana 5\",\" Semana 6\"]}],\"descuentoHermanos\":{\"porcentaje\":5,\"importe\":\"0.00\"},\"tipoPago\":{\"tipo\":\"Unico\",\"descuentoUnicoPago\":{\"porcentaje\":5,\"importe\":0}},\"total\":\"208.00\"}",
+    "pagina": "Inscripcion: Casal dEstiu 2025",
+    "idTipo_pago": 28
+}
+[2025-05-12 11:53:00][DEBUG] Procesando semana número: 1
+[2025-05-12 11:53:00][DEBUG] ID de semana encontrado: 1
+[2025-05-12 11:53:00][INFO] Semana 1 asignada al jugador Marco
+[2025-05-12 11:53:00][DEBUG] Procesando semana número: 3
+[2025-05-12 11:53:00][DEBUG] ID de semana encontrado: 3
+[2025-05-12 11:53:00][INFO] Semana 3 asignada al jugador Marco
+[2025-05-12 11:53:00][DEBUG] Procesando semana número: 4
+[2025-05-12 11:53:00][DEBUG] ID de semana encontrado: 4
+[2025-05-12 11:53:00][INFO] Semana 4 asignada al jugador Marco
+[2025-05-12 11:53:00][DEBUG] Procesando semana número: 5
+[2025-05-12 11:53:00][DEBUG] ID de semana encontrado: 5
+[2025-05-12 11:53:00][INFO] Semana 5 asignada al jugador Marco
+[2025-05-12 11:53:00][DEBUG] Procesando semana número: 6
+[2025-05-12 11:53:00][DEBUG] ID de semana encontrado: 6
+[2025-05-12 11:53:00][INFO] Semana 6 asignada al jugador Marco
+[2025-05-12 11:53:00][INFO] Proceso de inserción completado exitosamente

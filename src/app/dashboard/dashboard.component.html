@@ -1,0 +1,53 @@
+<nav class="navbar navbar-dark fixed-top bg-dark flex-nowrap p-0 shadow">
+    <a class="d-flex d-lg-none d-xl-none ml-3" (click)="menuObert = !menuObert" ><i class="fas fa-bars"></i></a>
+    <a class="navbar-brand d-flex float-left" href="/"><img src="/assets/logo.png"/></a>
+    <div class="text-uppercase text-center d-none d-lg-flex">{{ titulo }} - {{ subtitulo }}</div>
+    <div class="d-flex">
+      <i class="fab fa-facebook mr-3 {{appComponent.facebookApi == false ? 'text-danger' : 'text-success'}}" (click)="appComponent.facebookApi == false ? integrar('facebook') : ''" tooltip="{{appComponent.facebookApi == false ? 'No integrado' : 'Integrado'}}"></i>
+      <i class="fab fa-instagram mr-3 {{appComponent.instagramApi == false ? 'text-danger' : 'text-success'}}" (click)="appComponent.instagramApi == false ? integrar('instagram') : ''" tooltip="{{appComponent.instagramApi == false ? 'No integrado' : 'Integrado'}}"></i>
+      <i class="fab fa-twitter mr-3 {{appComponent.twitterApi == false ? 'text-danger' : 'text-success'}}" (click)="appComponent.twitterApi == false ? integrar('twitter') : ''" tooltip="{{appComponent.twitterApi == false ? 'No integrado' : 'Integrado'}}"></i>
+      <i class="fab fa-youtube mr-3 {{appComponent.googleApi == false ? 'text-danger' : 'text-success'}}" (click)="appComponent.googleApi == false ? integrar('google') : ''" tooltip="{{appComponent.googleApi == false ? 'No integrado' : 'Integrado'}}"></i>
+      <i id="salir" (click)="logout()" class="fas fa-sign-out-alt mr-3" tooltip="Salir"></i>
+    </div>
+</nav>
+
+<!-- Container for sidebar(s) + page content -->
+<ng-sidebar-container>
+
+  <!-- A sidebar -->
+  <ng-sidebar mode="push" position="start" (click)="toogleMenu()" [(opened)]="menuObert">
+    <ul id="sidebarnav" class="nav flex-column">
+      <li *ngFor="let modul of modulos" class="nav-item">
+        <a class="nav-link row" (click)="router.navigateByUrl(modul.ruta)">
+          <span class="col-8">{{ modul.name }}</span>
+        </a>
+      </li>
+    </ul>
+  </ng-sidebar>
+
+  <!-- Page content -->
+  <div ng-sidebar-content >
+    <router-outlet></router-outlet>
+  </div>
+
+</ng-sidebar-container>
+<!--
+<div class="container-fluid">
+  <div class="row">
+    <nav #sidebar class="col-md-2 d-md-block bg-light sidebar pt-4">
+      <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+          <li *ngFor="let modul of modulos" class="nav-item">
+            <a class="nav-link row" (click)="router.navigateByUrl(modul.ruta)">
+              <span class="col-8">{{ modul.name }}</span>
+            </a>
+          </li>
+       </ul>
+      </div>
+    </nav>
+
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>-->

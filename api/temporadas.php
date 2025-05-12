@@ -17,51 +17,19 @@
 
       if (isset($params->equipos)) {
         $response->equipos = array();
-        $sqlEquipos = "SELECT e.*, c.categoria, t.temporada, co.competicio as competicion, tc.tipo as tipoCategoria, e.nacidos_desde_anyo as nacidosDesdeAnyo, ".
-        "e.nacidos_hasta_anyo as nacidosHastaAnyo FROM equipo e ".
-        "INNER JOIN categoria c ON e.id_categoria = c.id ".
-        "INNER JOIN temporada t ON e.id_temporada = t.id ".
-        "INNER JOIN competicion co ON e.id_competicion = co.id ".
-        "INNER JOIN tipo_categoria tc ON e.id_tipo_categoria = tc.id ".
-        "WHERE e.id_temporada = (SELECT id FROM temporada ORDER BY id DESC LIMIT 1) ".
-        "ORDER BY c.id ASC";
-        if ($resultEquipos = mysqli_query($con, $sqlEquipos)) {
-          while ($userDataEquipo = mysqli_fetch_array($resultEquipos, MYSQLI_ASSOC)) {
-            $userDataEquipo['jugadoresTotales'] = 0;
-            $userDataEquipo['jugadoresSuccess'] = 0;
-            $userDataEquipo['jugadoresWarning'] = 0;
-            $userDataEquipo['jugadoresDanger'] = 0;
-            $sqlTipoPagoTemporadaRegular = "SELECT id FROM tipo_pago WHERE concepto = 'Temporada Regular' AND idTemporada = (SELECT MAX(id) FROM temporada)";
-            if ($resultTipoPago = mysqli_query($con, $sqlTipoPagoTemporadaRegular)) {
-              $tipoPagoTemporadaRegular = mysqli_fetch_array($resultTipoPago, MYSQLI_ASSOC);
-            } else{
-              return http_response_code(422);
-            }
-            $sqlJugadores = "SELECT j.*, p.*, (SELECT foto FROM fotos WHERE id_persona = p.id AND id_temporada = (SELECT id_temporada FROM equipo WHERe id = {$userDataEquipo['id']})) as foto, ej.dorsal, ".
-            "(SELECT quota FROM jugador_temporada WHERE idTipo = {$tipoPagoTemporadaRegular['id']} AND idJugador = j.id) as quota, ".
-            "(SELECT IFNULL(SUM(importe),0) FROM movimientos WHERE dniJugador = p.dni AND pagoCompletado = 1 AND tipo_pago = {$tipoPagoTemporadaRegular['id']}) as pagado ".
-            "FROM jugador j ".
-            "INNER JOIN persona p ON j.id = p.id INNER JOIN equipos_jugadores ej ON j.id = ej.id_jugador WHERE ej.id_equipo = {$userDataEquipo['id']} AND j.baja = 0 ORDER BY p.primer_apellido ASC";
-            if ($resultJugadores = mysqli_query($con, $sqlJugadores)) {
-              while ($userDataJugador = mysqli_fetch_array($resultJugadores, MYSQLI_ASSOC)) {
-                $userDataJugador['quota'] = (float)$userDataJugador['quota'];
-                $userDataJugador['pagado'] = (float)$userDataJugador['pagado'];
-                if ($userDataJugador['quota'] == 0.0){
-                  $userDataEquipo['jugadoresTotales'] ++;
-                  $userDataEquipo['jugadoresSuccess'] ++;
-                } else if ($userDataJugador['pagado'] < 150){
-                  $userDataEquipo['jugadoresTotales'] ++;
-                  $userDataEquipo['jugadoresDanger'] ++;
-                } else if ($userDataJugador['pagado'] < $userDataJugador['quota']){
-                  $userDataEquipo['jugadoresTotales'] ++;
-                  $userDataEquipo['jugadoresWarning'] ++;
-                } else {
-                  $userDataEquipo['jugadoresTotales'] ++;
-                  $userDataEquipo['jugadoresSuccess'] ++;
-                }
-              }
-            }
-            $response->equipos[] = $userDataEquipo;
+
+        $sql = "SELECT e.*, c.categoria, t.temporada, co.competicio as competicion, tc.tipo as tipoCategoria, e.nacidos_desde_anyo as nacidosDesdeAnyo, ".
+          "e.nacidos_hasta_anyo as nacidosHastaAnyo FROM equipo e ".
+          "INNER JOIN categoria c ON e.id_categoria = c.id ".
+          "INNER JOIN temporada t ON e.id_temporada = t.id ".
+          "INNER JOIN competicion co ON e.id_competicion = co.id ".
+          "INNER JOIN tipo_categoria tc ON e.id_tipo_categoria = tc.id ".
+          "WHERE e.id_temporada = (SELECT id FROM temporada ORDER BY id DESC LIMIT 1) ".
+          "ORDER BY c.id ASC";
+
+        if ($result = mysqli_query($con, $sql)) {
+          while ($userData = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
+            $response->equipos[] = $userData;
           }
         }
       } else if (isset($params->jugadores)) {
@@ -72,40 +40,16 @@
         $id_equipo = $params->equipo;
         $filtro = $params->filtro;
 
-        $sqlTipoPagoTemporadaRegular = "SELECT id FROM tipo_pago WHERE concepto = 'Temporada Regular' AND idTemporada = (SELECT MAX(id) FROM temporada)";
-        if ($result = mysqli_query($con, $sqlTipoPagoTemporadaRegular)) {
-          $tipoPagoTemporadaRegular = mysqli_fetch_array($result, MYSQLI_ASSOC);
-        } else{
-          return http_response_code(422);
-        }
-
-        $sql = "SELECT j.*, p.*, (SELECT foto FROM fotos WHERE id_persona = p.id AND id_temporada = (SELECT id_temporada FROM equipo WHERe id = $id_equipo)) as foto, ej.dorsal, ".
-          "(SELECT quota FROM jugador_temporada WHERE idTipo = {$tipoPagoTemporadaRegular['id']} AND idJugador = j.id) as quota, ".
-          "(SELECT IFNULL(SUM(importe),0) FROM movimientos WHERE dniJugador = p.dni AND pagoCompletado = 1 AND tipo_pago = {$tipoPagoTemporadaRegular['id']}) as pagado ".
-          "FROM jugador j ".
+        $sql = "SELECT j.*, p.*, (SELECT foto FROM fotos WHERE id_persona = p.id AND id_temporada = (SELECT id_temporada FROM equipo WHERe id = $id_equipo)) as foto, ej.dorsal FROM jugador j ".
           "INNER JOIN persona p ON j.id = p.id INNER JOIN equipos_jugadores ej ON j.id = ej.id_jugador WHERE ej.id_equipo = $id_equipo AND j.baja = 0 ORDER BY p.primer_apellido ASC";
         if ($result = mysqli_query($con, $sql)) {
           while ($userData = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $userData['quota'] = (float)$userData['quota'];
-            $userData['pagado'] = (float)$userData['pagado'];
-            if ($userData['quota'] == 0.0){
-              $userData['semaforo'] = "text-success";
-            } else if ($userData['pagado'] < 150){
-              $userData['semaforo'] = "text-danger";
-            } else if ($userData['pagado'] < $userData['quota']){
-              $userData['semaforo'] = "text-warning";
-            } else {
-              $userData['semaforo'] = "text-success";
-            }
             $response->jugadoresAsignados[] = $userData;
           }
         }
 
-        $sql = "SELECT j.*, p.*, (SELECT foto FROM fotos WHERE id_persona = p.id AND id_temporada = (SELECT id_temporada FROM equipo WHERe id = $id_equipo)) as foto, ".
-            "(SELECT quota FROM jugador_temporada WHERE idTipo = {$tipoPagoTemporadaRegular['id']} AND idJugador = j.id) as quota, ".
-            "(SELECT IFNULL(SUM(importe),0) FROM movimientos WHERE dniJugador = p.dni AND pagoCompletado = 1 AND tipo_pago = {$tipoPagoTemporadaRegular['id']}) as pagado ".
-            "FROM jugador j INNER JOIN persona p ON j.id = p.id ".
-            "WHERE j.id IN (SELECT idJugador FROM jugador_temporada WHERE idTemporada = (SELECT MAX(id) FROM temporada)) AND j.id NOT IN (SELECT id_jugador FROM equipos_jugadores WHERE id_equipo IN (SELECT id FROM equipo WHERE id_temporada = (SELECT id FROM temporada ORDER BY id DESC LIMIT 1))) AND j.baja = 0 ".
+        $sql = "SELECT j.*, p.*, (SELECT foto FROM fotos WHERE id_persona = p.id AND id_temporada = (SELECT id_temporada FROM equipo WHERe id = $id_equipo)) as foto FROM jugador j INNER JOIN persona p ON j.id = p.id ".
+            "WHERE j.id NOT IN (SELECT id_jugador FROM equipos_jugadores WHERE id_equipo IN (SELECT id FROM equipo WHERE id_temporada = (SELECT id FROM temporada ORDER BY id DESC LIMIT 1))) AND j.baja = 0 ".
             "AND IF(((SELECT id_tipo_categoria FROM equipo WHERE id = $id_equipo) != 3),p.id_sexo = (SELECT id_tipo_categoria FROM equipo WHERE id = $id_equipo),'1=1') ".
             "AND YEAR(p.fecha_nacimiento) >= (SELECT nacidos_desde_anyo FROM equipo WHERE id = $id_equipo) AND YEAR(p.fecha_nacimiento) <= (SELECT nacidos_hasta_anyo FROM equipo WHERE id = $id_equipo) ";
         if ($filtro != ''){
@@ -114,26 +58,12 @@
         $sql .= "ORDER BY p.primer_apellido ASC";
         if ($result = mysqli_query($con, $sql)) {
           while ($userData = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $userData['quota'] = (float)$userData['quota'];
-            $userData['pagado'] = (float)$userData['pagado'];
-            if ($userData['quota'] == 0.0){
-              $userData['semaforo'] = "text-success";
-            } else if ($userData['pagado'] < 150){
-              $userData['semaforo'] = "text-danger";
-            } else if ($userData['pagado'] < $userData['quota']){
-              $userData['semaforo'] = "text-warning";
-            } else {
-              $userData['semaforo'] = "text-success";
-            }
             $response->jugadoresDisponibles[] = $userData;
           }
         }
 
-        $sql = "SELECT j.*, p.*, (SELECT foto FROM fotos WHERE id_persona = p.id AND id_temporada = (SELECT id_temporada FROM equipo WHERe id = $id_equipo)) as foto, ".
-          "(SELECT quota FROM jugador_temporada WHERE idTipo = {$tipoPagoTemporadaRegular['id']} AND idJugador = j.id) as quota, ".
-          "(SELECT IFNULL(SUM(importe),0) FROM movimientos WHERE dniJugador = p.dni AND pagoCompletado = 1 AND tipo_pago = {$tipoPagoTemporadaRegular['id']}) as pagado ".
-          "FROM jugador j INNER JOIN persona p ON j.id = p.id ".
-          "WHERE j.id IN (SELECT idJugador FROM jugador_temporada WHERE idTemporada = (SELECT MAX(id) FROM temporada)) AND j.id NOT IN (SELECT id_jugador FROM equipos_jugadores WHERE id_equipo IN (SELECT id FROM equipo WHERE id_temporada = (SELECT id FROM temporada ORDER BY id DESC LIMIT 1))) AND j.baja = 0 ".
+        $sql = "SELECT j.*, p.*, (SELECT foto FROM fotos WHERE id_persona = p.id AND id_temporada = (SELECT id_temporada FROM equipo WHERe id = $id_equipo)) as foto FROM jugador j INNER JOIN persona p ON j.id = p.id ".
+          "WHERE j.id NOT IN (SELECT id_jugador FROM equipos_jugadores WHERE id_equipo IN (SELECT id FROM equipo WHERE id_temporada = (SELECT id FROM temporada ORDER BY id DESC LIMIT 1))) AND j.baja = 0 ".
           "AND IF(((SELECT id_tipo_categoria FROM equipo WHERE id = $id_equipo) != 3),p.id_sexo = (SELECT id_tipo_categoria FROM equipo WHERE id = $id_equipo),'1=1') ".
           "AND YEAR(p.fecha_nacimiento) > (SELECT nacidos_hasta_anyo FROM equipo WHERE id = $id_equipo) ";
         if ($filtro != ''){
@@ -142,17 +72,6 @@
         $sql .= "ORDER BY p.primer_apellido ASC";
         if ($result = mysqli_query($con, $sql)) {
           while ($userData = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $userData['quota'] = (float)$userData['quota'];
-            $userData['pagado'] = (float)$userData['pagado'];
-            if ($userData['quota'] == 0.0){
-              $userData['semaforo'] = "text-success";
-            } else if ($userData['pagado'] < 150){
-              $userData['semaforo'] = "text-danger";
-            } else if ($userData['pagado'] < $userData['quota']){
-              $userData['semaforo'] = "text-warning";
-            } else {
-              $userData['semaforo'] = "text-success";
-            }
             $response->jugadoresDisponiblesJovenes[] = $userData;
           }
         }
@@ -294,21 +213,14 @@
               "ORDER BY c.id ASC";
         if ($result = mysqli_query($con, $sql)) {
           while ($userData = mysqli_fetch_array($result, MYSQLI_ASSOC)) {
-            $fotos = array();
-            $sql2 = "SELECT foto FROM galeria_equipos WHERE id_equipo = ". $userData['id'] ." UNION SELECT imagenPortada FROM noticias WHERE equipo = ". $userData['id'] ." UNION SELECT m.mediaURL FROM media m WHERE m.id IN(SELECT nm.idMedia FROM noticias_media nm WHERE nm.idNoticia IN(SELECT noticias.id FROM noticias WHERE equipo = ". $userData['id'] ."));";
+			      $sql2 = "SELECT foto FROM galeria_equipos WHERE id_equipo = " . $userData['id'];
             if ($result2 = mysqli_query($con, $sql2)) {
+              $fotos = array();
               while ($fotosData = mysqli_fetch_array($result2, MYSQLI_ASSOC)) {
                 $fotos[] = $fotosData['foto'];
               }
               $userData['imagenes'] = $fotos;
             }
-            /*$sql3 = "SELECT imagenPortada FROM noticias WHERE equipo = " . $userData['id'];
-            if ($result3 = mysqli_query($con, $sql3)) {
-              while ($fotosDataNoticica = mysqli_fetch_array($result3, MYSQLI_ASSOC)) {
-                $fotos[] = $fotosDataNoticica['imagenPortada'];
-              }
-            }*/
-            //$userData['imagenes'] = $fotos;
             $response->equipos[] = $userData;
           }
         }
@@ -330,14 +242,14 @@
       $temporada = mysqli_real_escape_string($con, $params->temporada);
       $fecha_inicio = $params->fecha_inicio;
       $fecha_final = $params->fecha_final;
-      $observaciones = (!empty($params->observaciones)) ? "'" . mysqli_real_escape_string($con, $params->observaciones) . "'" : "NULL";
+      $observaciones = mysqli_real_escape_string($con, $params->observaciones);
 
-      $sql = "INSERT INTO temporada VALUES (NULL,'$temporada','$fecha_inicio','$fecha_final',$observaciones)";
+      $sql = "INSERT INTO temporada VALUES (NULL,'$temporada','$fecha_inicio','$fecha_final','$observaciones')";
       if(mysqli_query($con, $sql)) {
-        $sql2 = "INSERT INTO fotos (SELECT id_persona, (SELECT MAX(id) FROM temporada) as id_temporada, foto FROM fotos WHERE id_temporada = (SELECT MAX(id) - 1 FROM temporada))";
-        if(mysqli_query($con, $sql2)) {
-          $sql3 = "SELECT * FROM temporada ORDER BY id DESC LIMIT 1";
-          if ($result = mysqli_query($con, $sql3)) {
+        $sql = "INSERT INTO fotos (SELECT id_persona, " . mysqli_insert_id($con) . ",  foto FROM fotos)";
+        if(mysqli_query($con, $sql)) {
+          $sql = "SELECT * FROM temporada ORDER BY id DESC LIMIT 1";
+          if ($result = mysqli_query($con, $sql)) {
            return http_response_code(200);
           }
         } else {
@@ -354,4 +266,5 @@
   //error_log(print_r($response->tipos_parentesco, TRUE));
   header('Content-Type: application/json');
   echo json_encode($response);
+
 ?>

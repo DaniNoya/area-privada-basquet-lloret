@@ -1,0 +1,6 @@
+[2025-05-09 12:41:14][INFO] Datos recibidos para registro de puertas abiertas: {"nom":"Daniel","primerCognom":"Noya","segonCognom":"Catoira","dataNaixement":"2025-05-14","correuElectronic":"correo@correo.com","telefon1":"123123123","telefon2":"123123123","genere":"1","hasJugatAnteriorment":"Si","indicaQuin":"dfda"}
+[2025-05-09 12:41:14][INFO] Registro exitoso para: Daniel Noya
+[2025-05-09 12:52:40][INFO] Datos recibidos para registro de puertas abiertas: {"nom":"","primerCognom":"","segonCognom":"","dataNaixement":"","correuElectronic":"","telefon1":"","telefon2":"","genere":"1","hasJugatAnteriorment":"Si","indicaQuin":""}
+[2025-05-09 12:52:40][INFO] Registro exitoso para:  
+[2025-05-12 11:56:04][INFO] Datos recibidos para registro de puertas abiertas: {"nom":"Daniel","primerCognom":"Noya","segonCognom":"Catoira","dataNaixement":"2008-04-08","correuElectronic":"correo@correo.com","telefon1":"123123123","telefon2":"123123123","genere":"1","hasJugatAnteriorment":"Si","indicaQuin":"equip anterior"}
+[2025-05-12 11:56:04][INFO] Registro exitoso para: Daniel Noya

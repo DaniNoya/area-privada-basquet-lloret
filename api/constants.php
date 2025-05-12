@@ -1,6 +1,6 @@
 <?php
 define("TEST_APP",true);
-define("BASE_API_URL", (TEST_APP) ? "http://localhost/Basquet Lloret/api/" : __DIR__."/");
+define("BASE_API_URL", (TEST_APP) ? "http://localhost/basquetlloretWP/areaprivada/api" : "http://localhost/basquetlloretWP/areaprivada/api");
 define("TWITTER_CONSUMER_KEY", "suW7gAUfRPTK6bIXHES0azHPM");
 define("TWITTER_CONSUMER_SECRET", "R2MhzfQrseDQTFsQbLay6y3RYtiaQvJSScNbKLC261tFowpqCT");
 define("TWITTER_OAUTH_TOKEN", "1204429277564981255-zY61KwQk6JCee81FKdDBMhbW4QUBKG");

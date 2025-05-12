@@ -64,23 +64,25 @@
                 $sqlConsultJugadorTemporada = "SELECT * FROM jugador_temporada WHERE idJugador = (SELECT id FROM persona WHERE dni = '$dniJugador') AND idTipo = $tipo_pago;";
                 if ($resultJugadorTemporada = mysqli_query($con, $sqlConsultJugadorTemporada)) {
                     $jugadorTemporadaData = mysqli_fetch_array($resultJugadorTemporada, MYSQLI_ASSOC);
-                    $quota = $jugadorTemporadaData['quota'];
+                    $quota = isset($jugadorTemporadaData['quota']) ? $jugadorTemporadaData['quota'] : null;
                 }
 
                 if ($quota == '' || $quota == null) {
-                    $sqlConsultSocioTemporada = "SELECT * FROM cblloretdb.socio_temporada st WHERE st.id_socio = (SELECT s.id FROM cblloretdb.socio s WHERE s.id_persona = '$idUsuario');";
+                    $sqlConsultSocioTemporada = "SELECT * FROM socio_temporada st WHERE st.id_socio = (SELECT s.id FROM socio s WHERE s.id_persona = '$idUsuario');";
                     if ($resultSocioTemporada = mysqli_query($con, $sqlConsultSocioTemporada)) {
                         $socioTemporadaData = mysqli_fetch_array($resultSocioTemporada, MYSQLI_ASSOC);
                         $quota = $socioTemporadaData['quota'];
                     }
                 }
 
-                $totalPagos = 0;
+                // Para el registro individual, inicializamos el pago
+                $importeActual = 0;
                 if($pagoCompletado == 1){
-                    $totalPagos += $importePagado;
+                    $importeActual = $importePagado;
                 }
 
-                $restante = $quota - $totalPagos;
+                // El restante se calculará correctamente cuando se agrupen todos los pagos
+                $restante = $quota - $importeActual;
 
                 $pago = [
                     "importe" => $importePagado,
@@ -102,17 +104,25 @@
                 $estaConcepto = false;
                 foreach ($arrayFinal as $key => $value) {
                     foreach ($value as $key2 => $value2) {
-                        if ($key2 == 'tipo') {
-                            if ($value['tipo'] == $conceptoGeneral) {
+                        if ($key2 == 'idTipo') {
+                            if ($value['idTipo'] == $tipo_pago) {
                                 $estaJugador = false;
                                 $estaConcepto = true;
                                 foreach ($arrayFinal[$key]['data'] as $key3 => $value3) {
                                     if($value3['jugador'] == $data['jugador']){
                                         $estaJugador = true;
                                         $arrayFinal[$key]['data'][$key3]['pagos'][] = $pago;
-                                        if($pagoCompletado == 1){
-                                            $arrayFinal[$key]['data'][$key3]['restante'] -= $pago['importe'];
+                                        
+                                        // Recalculamos el total de pagos sumando todos los pagos completados
+                                        $totalPagosJugador = 0;
+                                        foreach($arrayFinal[$key]['data'][$key3]['pagos'] as $pagoJugador) {
+                                            if($pagoJugador['pagoCompletado'] == 1) {
+                                                $totalPagosJugador += $pagoJugador['importe'];
+                                            }
                                         }
+                                        
+                                        // Actualizamos el restante basado en el total de pagos acumulados
+                                        $arrayFinal[$key]['data'][$key3]['restante'] = $arrayFinal[$key]['data'][$key3]['quota'] - $totalPagosJugador;
                                     }
                                 }
                                 if($estaJugador == false){

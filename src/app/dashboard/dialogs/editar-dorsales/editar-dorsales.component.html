@@ -1,0 +1,54 @@
+<button id="close" mat-dialog-close class="close outline-none"><i class="fas fa-times-circle"></i></button>
+<div class="container">
+  <mat-spinner [diameter]="50" *ngIf="isLoadingResults"></mat-spinner>
+  <table class="w-100" mat-table [dataSource]="dataSource" matSort [matSortActive]="sortActive" [matSortDirection]="sortDirection">
+
+    <ng-container matColumnDef="nombre">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="nombre"> Nombre </th>
+      <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="primer_apellido">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="primer_apellido"> Primer Apellido </th>
+      <td mat-cell *matCellDef="let row"> {{row.primer_apellido}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="segundo_apellido">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="segundo_apellido"> Segundo Apellido </th>
+      <td mat-cell *matCellDef="let row"> {{row.segundo_apellido}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="dorsal">
+      <th mat-header-cell *matHeaderCellDef mat-sort-header="dorsal"> Dorsal </th>
+      <td mat-cell *matCellDef="let row">
+        <input type="text" maxlength="2" id="dorsalInput" class="outline-none" (blur)="saveDorsal(row,$event.target.value)" value="{{row.dorsal}}"/>
+        <i class="fas fa-save ml-1 text-green" tooltip="Guardar"></i>
+      </td>
+    </ng-container>
+
+    <ng-container matColumnDef="foto">
+      <th mat-header-cell *matHeaderCellDef> Foto (Clic para cambiar) </th>
+      <td mat-cell *matCellDef="let row">
+        <input [hidden]="row.foto" type="file" accept="image/jpg" id="inputFoto" name="foto" #file imageUpload (imageSelected)="selected($event,row)" [resizeOptions]="resizeOptions"/>
+        <img *ngIf="row.foto" (click)="file.click()" height="100px" width="100px" src="{{row.foto}}" tooltip="Clic para cambiar"/>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+    </tr>
+  </table>
+
+  <div class="no-results" *ngIf="dataSource.data.length == 0">
+    No hay datos
+  </div>
+</div>
+<ngx-spinner
+  bdColor = "rgba(51,51,51,0.8)"
+  size = "medium"
+  color = "#fff"
+  type = "ball-climbing-dot"
+  [fullScreen] = "true"
+>
+  <p style="color: white" > Espere por favor... </p>
+</ngx-spinner>

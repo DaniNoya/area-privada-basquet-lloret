@@ -1,0 +1,310 @@
+<div *ngIf="!modal && !assignarPersona" class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+  <h1 class="h2">Socios</h1>
+</div>
+
+<div *ngIf="!socioSeleccionado" [ngClass]="{'mt-3':modal}">
+  <mat-form-field>
+    <input matInput type="text" placeholder="Filtrar" (keyup)="applyFilter($event.target.value)">
+  </mat-form-field>
+
+  <mat-form-field class="ml-5">
+    <mat-label>Mètodo de visualización</mat-label>
+    <mat-select [(value)]="metodoVisualizacion" (valueChange)="ngOnInit();ngAfterViewInit()">
+      <mat-option [value]="'alta'">Alta</mat-option>
+      <mat-option [value]="'baja'">Baja</mat-option>
+      <mat-option [value]="'all'">Todo</mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <mat-form-field *ngIf="modal" class="float-right">
+    <mat-label [ngClass]="{'text-danger': parentescoSeleccionado === undefined}">Selecciona el parentesco</mat-label>
+    <mat-select [(value)]="parentescoSeleccionado">
+      <mat-option *ngFor="let tipo of tiposParentesco" [value]="tipo.id">
+        {{tipo.tipo_parentesco}}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!--<button *ngIf="!modal && !assignarPersona" (click)="startAdd()" class="btn btn-success float-right">Añadir</button>-->
+
+  <div class="mat-elevation-z8">
+    <mat-spinner [diameter]="50" *ngIf="isLoadingResults"></mat-spinner>
+    <table class="w-100" mat-table [dataSource]="dataSource" matSort matSortActive="primer_apellido" matSortStart="asc">
+
+      <ng-container matColumnDef="partner_code">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Código de socio </th>
+        <td mat-cell *matCellDef="let row"> {{row.partner_code}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nombre">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Nombre </th>
+        <td mat-cell *matCellDef="let row"> {{row.nombre}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="primer_apellido">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Primer Apellido </th>
+        <td mat-cell *matCellDef="let row"> {{row.primer_apellido}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="segundo_apellido">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Segundo Apellido </th>
+        <td mat-cell *matCellDef="let row"> {{row.segundo_apellido}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="fecha_nacimiento">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Nacimiento </th>
+        <td mat-cell *matCellDef="let row"> {{row.fecha_nacimiento | date:'dd-MM-yyyy'}} </td>
+      </ng-container>
+
+      <!-- Acciones sin modal -->
+      <ng-container *ngIf="!modal && !assignarPersona" matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef class="pl-4">Acciones</th>
+        <td mat-cell *matCellDef="let row">
+          <a mat-icon-button class="btn-table text-info" (click)="showItem(row)" tooltip="Mostrar info">
+            <mat-icon class="mat-18">reorder</mat-icon>
+          </a>
+
+          <a mat-icon-button class="btn-table text-warning" (click)="startEdit(row)" tooltip="Editar">
+            <mat-icon aria-label="Edit">edit</mat-icon>
+          </a>
+
+          <a mat-icon-button *ngIf="row.baja === '0'" class="btn-table text-muted" (click)="bajaItem(row)" tooltip="Dar de Baja">
+            <mat-icon aria-label="Delete">arrow_downward</mat-icon>
+          </a>
+          <a mat-icon-button *ngIf="row.baja === '1'" class="btn-table text-muted" (click)="altaItem(row)" tooltip="Dar de Alta">
+            <mat-icon aria-label="Delete">arrow_upward</mat-icon>
+          </a>
+        </td>
+      </ng-container>
+
+      <!-- Acciones en modal -->
+      <ng-container *ngIf="modal" matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let row">
+          <a mat-icon-button class="btn-table text-info" (click)="addDirectivoToFamiliar(row)" tooltip="Añadir">
+            <mat-icon class="mat-18">add</mat-icon>
+          </a>
+        </td>
+      </ng-container>
+
+      <!-- Acciones en assignarPersona -->
+      <ng-container *ngIf="assignarPersona" matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Acciones</th>
+        <td mat-cell *matCellDef="let row">
+          <a mat-icon-button class="btn-table text-info" (click)="assigna(row)" tooltip="Añadir">
+            <mat-icon class="mat-18">add</mat-icon>
+          </a>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+    </table>
+
+    <div class="no-results" *ngIf="dataSource.data.length == 0">
+      No hay datos
+    </div>
+
+    <mat-paginator *ngIf="!modal" [pageSize]="10" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    <mat-paginator *ngIf="modal" [pageSize]="5"></mat-paginator>
+  </div>
+</div>
+
+<div *ngIf="socioSeleccionado && !crearSocio">
+  <div class="row">
+    <div class="col-3">
+      <h2>Detalles Socio</h2>
+    </div>
+    <div class="col-9 text-right">
+      <a (click)="volver()" class="btn btn-secondary text-white">Volver al listado</a>
+    </div>
+  </div>
+  <form #editForm="ngForm" (ngSubmit)="save()">
+    <div class="form-row">
+      <div class="col-1">
+        <label for="inputId">Código de socio</label>
+        <input type="number" class="form-control" id="inputId" name="partner_code" value="{{socioSeleccionado.partner_code}}" [(ngModel)]="socioSeleccionado.partner_code" disabled>
+      </div>
+    </div>
+    <div class="form-row mt-3">
+      <div class="col">
+        <label for="inputNombre">Nombre</label>
+        <input type="text" class="form-control" id="inputNombre" name="nombre" #inputNombre="ngModel" [disabled]="!editarSocio" [(ngModel)]="socioSeleccionado.nombre" required>
+        <div *ngIf="!inputNombre.valid && (inputNombre.dirty || inputNombre.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col">
+        <label for="inputPrimerApellido">Primer Apellido</label>
+        <input type="text" class="form-control" id="inputPrimerApellido" name="primer_apellido" #inputPrimerApellido="ngModel" [disabled]="!editarSocio" [(ngModel)]="socioSeleccionado.primer_apellido" required>
+        <div *ngIf="!inputPrimerApellido.valid && (inputPrimerApellido.dirty || inputPrimerApellido.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col">
+        <label for="inputSegundoApellido">Segundo Apellido</label>
+        <input type="text" class="form-control" id="inputSegundoApellido" name="segundo_apellido" [disabled]="!editarSocio" [(ngModel)]="socioSeleccionado.segundo_apellido">
+      </div>
+    </div>
+    <div class="form-row mt-3">
+      <div class="col">
+        <label for="inputDni">D.N.I./N.I.E</label>
+        <input type="text" class="form-control" id="inputDni" name="dni" [disabled]="!editarSocio" #inputDni="ngModel" [(ngModel)]="socioSeleccionado.dni" required>
+        <div *ngIf="!inputDni.valid && (inputDni.dirty || inputDni.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col">
+        <label for="inputFechaNacimiento">Fecha Nacimiento</label>
+        <input type="date" class="form-control" id="inputFechaNacimiento" name="fecha_nacimiento" #inputFechaNacimiento="ngModel" [disabled]="!editarSocio" [(ngModel)]="socioSeleccionado.fecha_nacimiento" required>
+        <div *ngIf="!inputFechaNacimiento.valid && (inputFechaNacimiento.dirty || inputFechaNacimiento.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col">
+        <label for="inputTelefono1">Teléfono</label>
+        <input type="text" class="form-control" id="inputTelefono1" name="telefono1" #inputTelefono1="ngModel" [disabled]="!editarSocio" [(ngModel)]="socioSeleccionado.telefono1" required>
+        <div *ngIf="!inputTelefono1.valid && (inputTelefono1.dirty || inputTelefono1.touched)" class="text-danger">Campo requerido</div>
+      </div>
+    </div>
+    <div class="form-row mt-3">
+      <div class="col-6">
+        <label for="inputDireccion">Dirección</label>
+        <input type="text" class="form-control" id="inputDireccion" name="direccion" #inputDireccion="ngModel" [disabled]="!editarSocio" [(ngModel)]="socioSeleccionado.direccion" required>
+        <div *ngIf="!inputDireccion.valid && (inputDireccion.dirty || inputDireccion.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col-2">
+        <label for="inputCodigoPostal">Código Postal</label>
+        <input type="text" class="form-control" id="inputCodigoPostal" name="codigo_postal" #inputCodigoPostal="ngModel" [disabled]="!editarSocio" [(ngModel)]="socioSeleccionado.codigo_postal" required>
+        <div *ngIf="!inputCodigoPostal.valid && (inputCodigoPostal.dirty || inputCodigoPostal.touched)" class="text-danger">Campo requerido</div>
+      </div>
+      <div class="col-4">
+        <label for="inputLocalidad">Población</label>
+        <input type="text" class="form-control" id="inputLocalidad" name="localidad" #inputLocalidad="ngModel" [(ngModel)]="socioSeleccionado.localidad" [disabled]="!editarSocio" required>
+        <div *ngIf="!inputLocalidad.valid && (inputLocalidad.dirty || inputLocalidad.touched)" class="text-danger">Campo requerido</div>
+      </div>
+    </div>
+    <div class="form-row mt-3">
+      <div class="col">
+        <label for="inputEmail">Correo electrónico</label>
+        <input type="email" class="form-control" id="inputEmail" name="email" #inputEmail="ngModel" [(ngModel)]="socioSeleccionado.email" [disabled]="!editarSocio" required>
+        <div *ngIf="!inputEmail.valid && (inputEmail.dirty || inputEmail.touched)" class="text-danger">El correo debe tener un formato correcto</div>
+      </div>
+      <div class="form-group">
+        <label for="selectSexo">Sexo</label>
+        <select class="form-control" id="selectSexo" [disabled]="!editarSocio" name="id_sexo" #selectSexo="ngModel" [(ngModel)]="socioSeleccionado.id_sexo" required>
+          <option *ngFor="let sexo of sexos" value="{{ sexo.id }}">{{ sexo.sexo }}</option>
+        </select>
+      </div>
+    </div>
+    <a *ngIf="!editarSocio" (click)="editar()" class="btn btn-info">Edición</a>
+    <button *ngIf="editarSocio" [disabled]="!editForm.form.valid" type="submit" class="btn btn-success">Guardar</button>
+    <a *ngIf="editarSocio" (click)="editarSocio = false" class="btn btn-secondary ml-3">Cancelar</a>
+    <div class="btn alert-danger ml-3" *ngIf="error">{{ error }}</div>
+  </form>
+</div>
+
+<div *ngIf="crearSocio">
+  <div class="row">
+    <div class="col-3">
+      <h2>Añadir Socio</h2>
+    </div>
+    <div class="col-9 text-right">
+      <a (click)="volver()" class="btn btn-light">Volver al listado</a>
+    </div>
+  </div>
+  <mat-tab-group mat-stretch-tabs class="mat-elevation-z4">
+    <mat-tab label="Nuevo">
+      <form #addForm="ngForm" class="p-2" (ngSubmit)="store()">
+        <div class="form-row mt-3">
+          <div class="col">
+            <label for="inputAddNombre">Nombre</label>
+            <input type="text" class="form-control" id="inputAddNombre" name="nombre" #inputAddNombre="ngModel" [(ngModel)]="socioSeleccionado.nombre" required>
+            <div *ngIf="!inputAddNombre.valid && (inputAddNombre.dirty || inputAddNombre.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputAddPrimerApellido">Primer Apellido</label>
+            <input type="text" class="form-control" id="inputAddPrimerApellido" name="primer_apellido" #inputAddPrimerApellido="ngModel" [(ngModel)]="socioSeleccionado.primer_apellido" required>
+            <div *ngIf="!inputAddPrimerApellido.valid && (inputAddPrimerApellido.dirty || inputAddPrimerApellido.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputAddSegundoApellido">Segundo Apellido</label>
+            <input type="text" class="form-control" id="inputAddSegundoApellido" name="segundo_apellido" [(ngModel)]="socioSeleccionado.segundo_apellido">
+          </div>
+        </div>
+        <div class="form-row mt-3">
+          <div class="col">
+            <label for="inputAddDni">D.N.I./N.I.E</label>
+            <input type="text" class="form-control" id="inputAddDni" name="dni" #inputAddDni="ngModel" [(ngModel)]="socioSeleccionado.dni" required>
+            <div *ngIf="!inputAddDni.valid && (inputAddDni.dirty || inputAddDni.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputAddFechaNacimiento">Fecha Nacimiento</label>
+            <input type="date" class="form-control" id="inputAddFechaNacimiento" name="fecha_nacimiento" #inputAddFechaNacimiento="ngModel" [(ngModel)]="socioSeleccionado.fecha_nacimiento" required>
+            <div *ngIf="!inputAddFechaNacimiento.valid && (inputAddFechaNacimiento.dirty || inputAddFechaNacimiento.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col">
+            <label for="inputAddTelefono1">Teléfono</label>
+            <input type="text" class="form-control" id="inputAddTelefono1" name="telefono1" #inputAddTelefono1="ngModel" [(ngModel)]="socioSeleccionado.telefono1" required>
+            <div *ngIf="!inputAddTelefono1.valid && (inputAddTelefono1.dirty || inputAddTelefono1.touched)" class="text-danger">Campo requerido</div>
+          </div>
+        </div>
+        <div class="form-row mt-3">
+          <div class="col-6">
+            <label for="inputAddDireccion">Dirección</label>
+            <input type="text" class="form-control" id="inputAddDireccion" name="direccion" #inputAddDireccion="ngModel" [(ngModel)]="socioSeleccionado.direccion" required>
+            <div *ngIf="!inputAddDireccion.valid && (inputAddDireccion.dirty || inputAddDireccion.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col-2">
+            <label for="inputAddCodigoPostal">Código Postal</label>
+            <input type="text" class="form-control" id="inputAddCodigoPostal" name="codigo_postal" #inputAddCodigoPostal="ngModel" [(ngModel)]="socioSeleccionado.codigo_postal" required>
+            <div *ngIf="!inputAddCodigoPostal.valid && (inputAddCodigoPostal.dirty || inputAddCodigoPostal.touched)" class="text-danger">Campo requerido</div>
+          </div>
+          <div class="col-4">
+            <label for="inputAddLocalidad">Población</label>
+            <input type="text" class="form-control" id="inputAddLocalidad" name="localidad" #inputAddLocalidad="ngModel" [(ngModel)]="socioSeleccionado.localidad" required />
+            <div *ngIf="!inputAddLocalidad.valid && (inputAddLocalidad.dirty || inputAddLocalidad.touched)" class="text-danger">Campo requerido</div>
+          </div>
+        </div>
+        <div class="form-row mt-3">
+          <div class="col">
+            <label for="inputAddEmail">Correo electrónico</label>
+            <input type="email" class="form-control" id="inputAddEmail" name="email" #inputAddEmail="ngModel" [email]="true" [(ngModel)]="socioSeleccionado.email" required />
+            <div *ngIf="!inputAddEmail.valid && (inputAddEmail.dirty || inputAddEmail.touched)" class="text-danger">El correo debe tener un formato correcto</div>
+          </div>
+          <div class="form-group">
+            <label for="selectAddSexo">Sexo</label>
+            <select class="form-control" id="selectAddSexo" name="id_sexo" #selectAddSexo="ngModel" [(ngModel)]="socioSeleccionado.id_sexo" required>
+              <option *ngFor="let sexo of sexos" value="{{ sexo.id }}">{{ sexo.sexo }}</option>
+            </select>
+          </div>
+        </div>
+        <button [disabled]="!addForm.form.valid" type="submit" class="btn btn-success">Guardar</button>
+        <a (click)="volver()" class="btn btn-secondary ml-3">Cancelar</a>
+        <div class="btn alert-danger ml-3" *ngIf="error">{{ error }}</div>
+      </form>
+    </mat-tab>
+    <!--<mat-tab label="Añadir desde jugador existente">
+      <app-jugadores
+        [assignarPersona]="true"
+        [assignaA]="'directivo'"
+        [controlador]="this"
+      ></app-jugadores>
+    </mat-tab>
+    <mat-tab label="Añadir desde familiar existente">
+      <app-familiares
+        [assignarPersona]="true"
+        [assignaA]="'directivo'"
+        [controlador]="this"></app-familiares>
+    </mat-tab>
+    <mat-tab label="Añadir desde entrenador existente">
+      <app-entrenadores
+        [assignarPersona]="true"
+        [assignaA]="'directivo'"
+        [controlador]="this"></app-entrenadores>
+    </mat-tab>-->
+  </mat-tab-group>
+</div>
+
+<ngx-spinner
+  bdColor = "rgba(51,51,51,0.8)"
+  size = "medium"
+  color = "#fff"
+  type = "ball-climbing-dot"
+  [fullScreen] = "true"
+>
+  <p style="color: white" > Espere por favor... </p>
+</ngx-spinner>
